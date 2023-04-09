@@ -1,0 +1,16 @@
+;$FILEVERSION=1.1
+;$STARTTIME=41281.5496458333
+;
+;   Start time: 07.01.2013 13:11:29.400.x
+;
+;   Message Number
+;   |         Time Offset (ms)
+;   |         |        Type
+;   |         |        |        ID (hex)
+;   |         |        |        |     Data Length Code
+;   |         |        |        |     |   Data Bytes (hex) ...
+;   |         |        |        |     |   |
+;---+--   ----+----  --+--  ----+---  +  -+ -- -- -- -- -- -- --
+     4)         4.0  Rx         0018  8  10 04 10 00 04 FF 40 0C
+   131)        66.9  Rx         0F7A  8  02 D7 5A 10 29 07 F0 E4
+    16)         6.8  Rx         0B41  8  7F A8 78 8D 89 7D 20 80
