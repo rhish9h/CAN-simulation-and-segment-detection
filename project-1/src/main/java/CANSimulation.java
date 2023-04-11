@@ -39,6 +39,23 @@ public class CANSimulation {
             System.out.println(canTrace.getNextMessage());
         }
 
+        //Start of New GPS section
+
+        fileName = "";
+
+        System.out.println("Please enter file name of GPS Data (Press ENTER to use default file):");
+        fileName = sc.nextLine();
+
+        if (fileName.trim().equals("")) {
+            fileName = "src/main/resources/GPStrace.txt";
+        }
+
+        System.out.println("Parsing file: " + fileName);
+        GPSParser gpsParser = new GPSParser();
+        GPSTrace gpsTrace = gpsParser.parseGPSTraceFile(fileName);
+        gpsTrace.print();
+
+        sc.close();
         System.out.println("End of Simulation");
     }
 }
