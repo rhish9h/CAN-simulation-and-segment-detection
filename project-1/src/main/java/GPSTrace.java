@@ -1,11 +1,13 @@
 import java.util.ArrayList;
+import java.util.List;
 
-//TODO add javadoc
+//TODO add javadoc for class and every function
 public class GPSTrace {
-    ArrayList<GPSCoordinate> trace;
+    private List<GPSCoordinate> trace;
+    private int curIdx = 0;
 
-    GPSTrace(){
-        trace = new ArrayList<GPSCoordinate>();
+    public GPSTrace(){
+        trace = new ArrayList<>();
     }
 
     public void addCoord(GPSCoordinate g){
@@ -18,7 +20,14 @@ public class GPSTrace {
         }
     }
 
-    public ArrayList<GPSCoordinate> getTrace(){
+    public List<GPSCoordinate> getTrace(){
         return trace;
+    }
+
+    public GPSCoordinate getNextMessage() {
+        if (curIdx < trace.size()) {
+            return trace.get(curIdx++);
+        }
+        return null;
     }
 }
