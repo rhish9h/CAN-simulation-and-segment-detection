@@ -1,15 +1,16 @@
 public class GPSCoordinate {
     private int offset;
-    private double xCoord;
-    private double yCoord;
+    private double latitude;
+    private double longitude;
 
     GPSCoordinate(int o, double x, double y){
         offset = o;
-        xCoord = x;
-        yCoord = y;
+        latitude = x;
+        longitude = y;
     }
 
     void print(){
-        System.out.println("Offset: " + offset + " ms" + "      Longitude: " + xCoord + "       Latitude: " + yCoord);
+        System.out.format("%-30s %-30s %-30s%n",
+                "Offset: " + offset + " ms", "Latitude: " + latitude, "Longitude: " + longitude);
     }
 }

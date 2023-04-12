@@ -16,10 +16,10 @@ public class GPSParser {
                 line = line.substring(0, line.length() - 1);
 
                 String[] split = line.split(", ");
-                double xValue = Double.parseDouble(split[0]);
-                double yValue = Double.parseDouble(split[1]);
+                double latitude = Double.parseDouble(split[0]);
+                double longitude = Double.parseDouble(split[1]);
 
-                GPSCoordinate newCoord = new GPSCoordinate(index * 1000, xValue, yValue);
+                GPSCoordinate newCoord = new GPSCoordinate(index * 1000, latitude, longitude);
 
                 gpsTrace.addCoord(newCoord);
 
