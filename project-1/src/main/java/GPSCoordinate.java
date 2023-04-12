@@ -1,3 +1,4 @@
+//TODO add javadoc
 public class GPSCoordinate {
     private int offset;
     private double latitude;

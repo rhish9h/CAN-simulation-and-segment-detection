@@ -3,6 +3,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
+//TODO add javadoc
 public class GPSParser {
     private int index = 0;
 
@@ -27,7 +28,7 @@ public class GPSParser {
             }
         }
         catch(FileNotFoundException e){
-            System.out.println("The gps file was not found!");
+            throw new IOException("The gps file was not found!", e);
         }
 
         return gpsTrace;

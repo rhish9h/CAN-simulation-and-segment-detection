@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 
+//TODO add javadoc
 public class GPSTrace {
     ArrayList<GPSCoordinate> trace;
 

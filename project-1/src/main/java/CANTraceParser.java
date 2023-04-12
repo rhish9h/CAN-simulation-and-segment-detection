@@ -1,4 +1,5 @@
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -40,6 +41,8 @@ public class CANTraceParser {
                     parseFail++;
                 }
             }
+        } catch (FileNotFoundException e) {
+            throw new IOException("The CAN file was not found!", e);
         }
 
         System.out.println("Parsed " + parseSuccess + " lines successfully. (IDs - 0018, 0F7A, 0B41)");
@@ -48,6 +51,7 @@ public class CANTraceParser {
         }
 
         canTrace.sortByTime();
+        System.out.println();
 
         return canTrace;
     }
