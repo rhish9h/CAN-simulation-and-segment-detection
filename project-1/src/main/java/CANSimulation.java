@@ -58,11 +58,13 @@ public class CANSimulation {
 
             double frameTime;
             double coordTime;
-            startTime = System.currentTimeMillis();
+            startTime = System.nanoTime();
+
             double curTime;
 
             while (frame != null && coord != null) {
-                curTime = System.currentTimeMillis() - startTime;
+                // getting accurate time in nanoseconds and converting to milliseconds
+                curTime = (System.nanoTime() - startTime) / 1000_000;
 
                 frameTime = frame != null ? frame.getTime() : 0;
                 coordTime = coord != null ? coord.getOffset() : 0;
