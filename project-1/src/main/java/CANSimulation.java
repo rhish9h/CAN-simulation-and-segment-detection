@@ -15,9 +15,11 @@ public class CANSimulation {
     private GPSTrace gpsTrace;
     private Scanner sc;
     private double startTime;
+    private SensorDataReceiver sensorDataReceiver;
 
     public CANSimulation() {
         sc = new Scanner(System.in);
+        sensorDataReceiver = new SensorDataReceiver();
     }
 
     public void parseCANData() throws IOException {
@@ -53,6 +55,9 @@ public class CANSimulation {
             parseCANData();
             parseGPSData();
 
+            System.out.println("Press enter to start simulation");
+            sc.nextLine();
+
             CANFrame frame = canTrace.getNextMessage();
             GPSCoordinate coord = gpsTrace.getNextMessage();
 
@@ -63,30 +68,57 @@ public class CANSimulation {
             double curTime;
 
             while (frame != null && coord != null) {
-                // getting accurate time in nanoseconds and converting to milliseconds
                 curTime = (System.nanoTime() - startTime) / 1000_000;
-
                 frameTime = frame != null ? frame.getTime() : 0;
                 coordTime = coord != null ? coord.getOffset() : 0;
 
-                if (frame == null && curTime >= coordTime) {
-                    System.out.println(curTime + " " + coordTime + " - " + coord.getLatitude() + " " + coord.getLongitude() + "\r");
-                    coord = gpsTrace.getNextMessage();
-                } else if (coord == null && curTime >= frameTime) {
-                    System.out.println(curTime + " " + frameTime + " - " + frame + "\r");
+                if (frameTime < coordTime && curTime >= frameTime) {
                     frame = canTrace.getNextMessage();
-                } else if (frame != null && coord != null) {
-                    if (frameTime < coordTime && curTime >= frameTime) {
-                        System.out.println(curTime + " " + frameTime + " - " + frame + "\r");
-                        frame = canTrace.getNextMessage();
-                    } else if (curTime >= coordTime) {
-                        System.out.println(curTime + " " + coordTime + " - " + coord.getLatitude() + " " + coord.getLongitude() + "\r");
-                        coord = gpsTrace.getNextMessage();
-                    }
+                } else if (curTime >= coordTime) {
+                    sensorDataReceiver.receiveSensorValues(coord.getLatitude(), coordTime, Identifier.GPS_LAT);
+                    sensorDataReceiver.receiveSensorValues(coord.getLongitude(), coordTime, Identifier.GPS_LON);
+                    coord = gpsTrace.getNextMessage();
+                } else {
+                    sensorDataReceiver.receiveSensorValues(0, curTime, Identifier.CUR_TIME);
                 }
+
+                // This delay is added on purpose to avoid jittery ui output
+                Thread.sleep(0, 200);
+            }
+
+            while (frame != null) {
+                curTime = (System.nanoTime() - startTime) / 1000_000;
+                frameTime = frame != null ? frame.getTime() : 0;
+
+                if (curTime >= frameTime) {
+                    frame = canTrace.getNextMessage();
+                } else {
+                    sensorDataReceiver.receiveSensorValues(0, curTime, Identifier.CUR_TIME);
+                }
+
+                // This delay is added on purpose to avoid jittery ui output
+                Thread.sleep(0, 200);
+            }
+
+            while (coord != null) {
+                curTime = (System.nanoTime() - startTime) / 1000_000;
+                coordTime = coord != null ? coord.getOffset() : 0;
+
+                if (curTime >= coordTime) {
+                    sensorDataReceiver.receiveSensorValues(coord.getLatitude(), coordTime, Identifier.GPS_LAT);
+                    sensorDataReceiver.receiveSensorValues(coord.getLongitude(), coordTime, Identifier.GPS_LON);
+                    coord = gpsTrace.getNextMessage();
+                } else {
+                    sensorDataReceiver.receiveSensorValues(0, curTime, Identifier.CUR_TIME);
+                }
+
+                // This delay is added on purpose to avoid jittery ui output
+                Thread.sleep(0, 200);
             }
         } catch (IOException e) {
             System.err.println(e.getMessage());
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
 
         System.out.println("End of Simulation");

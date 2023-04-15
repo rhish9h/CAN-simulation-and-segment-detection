@@ -7,6 +7,7 @@ import java.io.IOException;
 public class GPSParser {
     private int index = 0;
 
+    //TODO print parsing statistics
     public GPSTrace parseGPSTraceFile(String gpsFile) throws IOException{
         GPSTrace gpsTrace = new GPSTrace();
 
