@@ -16,6 +16,7 @@ public class CANSimulation {
     private Scanner sc;
     private double startTime;
     private SensorDataReceiver sensorDataReceiver;
+    private final int nanoDelay = 500;
 
     public CANSimulation() {
         sc = new Scanner(System.in);
@@ -73,6 +74,23 @@ public class CANSimulation {
                 coordTime = coord != null ? coord.getOffset() : 0;
 
                 if (frameTime < coordTime && curTime >= frameTime) {
+                    if (frame instanceof CANFrameSingleVal) {
+                        CANFrameSingleVal singleFrame = (CANFrameSingleVal) frame;
+                        sensorDataReceiver.receiveSensorValues(singleFrame.getValue().getValue(),
+                                singleFrame.getTime(),
+                                singleFrame.getDescription());
+                    } else {
+                        CANFrameTriVal triFrame = (CANFrameTriVal) frame;
+                        sensorDataReceiver.receiveSensorValues(triFrame.getValue1().getValue(),
+                                triFrame.getTime(),
+                                triFrame.getDescription1());
+                        sensorDataReceiver.receiveSensorValues(triFrame.getValue2().getValue(),
+                                triFrame.getTime(),
+                                triFrame.getDescription2());
+                        sensorDataReceiver.receiveSensorValues(triFrame.getValue3().getValue(),
+                                triFrame.getTime(),
+                                triFrame.getDescription3());
+                    }
                     frame = canTrace.getNextMessage();
                 } else if (curTime >= coordTime) {
                     sensorDataReceiver.receiveSensorValues(coord.getLatitude(), coordTime, Identifier.GPS_LAT);
@@ -83,7 +101,7 @@ public class CANSimulation {
                 }
 
                 // This delay is added on purpose to avoid jittery ui output
-                Thread.sleep(0, 200);
+                Thread.sleep(0, nanoDelay);
             }
 
             while (frame != null) {
@@ -97,7 +115,7 @@ public class CANSimulation {
                 }
 
                 // This delay is added on purpose to avoid jittery ui output
-                Thread.sleep(0, 200);
+                Thread.sleep(0, nanoDelay);
             }
 
             while (coord != null) {
@@ -113,7 +131,7 @@ public class CANSimulation {
                 }
 
                 // This delay is added on purpose to avoid jittery ui output
-                Thread.sleep(0, 200);
+                Thread.sleep(0, nanoDelay);
             }
         } catch (IOException e) {
             System.err.println(e.getMessage());
