@@ -17,6 +17,8 @@ public class CANSimulation {
     private double startTime;
     private SensorDataReceiver sensorDataReceiver;
     private final int nanoDelay = 500;
+    private CANFrame frame;
+    private GPSCoordinate coord;
 
     public CANSimulation() {
         sc = new Scanner(System.in);
@@ -59,80 +61,14 @@ public class CANSimulation {
             System.out.println("Press enter to start simulation");
             sc.nextLine();
 
-            CANFrame frame = canTrace.getNextMessage();
-            GPSCoordinate coord = gpsTrace.getNextMessage();
-
-            double frameTime;
-            double coordTime;
+            frame = canTrace.getNextMessage();
+            coord = gpsTrace.getNextMessage();
             startTime = System.nanoTime();
 
-            double curTime;
+            bothFrameAndCoordPresent();
+            onlyFramePresent();
+            onlyCoordPresent();
 
-            while (frame != null && coord != null) {
-                curTime = (System.nanoTime() - startTime) / 1000_000;
-                frameTime = frame != null ? frame.getTime() : 0;
-                coordTime = coord != null ? coord.getOffset() : 0;
-
-                if (frameTime < coordTime && curTime >= frameTime) {
-                    if (frame instanceof CANFrameSingleVal) {
-                        CANFrameSingleVal singleFrame = (CANFrameSingleVal) frame;
-                        sensorDataReceiver.receiveSensorValues(singleFrame.getValue().getValue(),
-                                singleFrame.getTime(),
-                                singleFrame.getDescription());
-                    } else {
-                        CANFrameTriVal triFrame = (CANFrameTriVal) frame;
-                        sensorDataReceiver.receiveSensorValues(triFrame.getValue1().getValue(),
-                                triFrame.getTime(),
-                                triFrame.getDescription1());
-                        sensorDataReceiver.receiveSensorValues(triFrame.getValue2().getValue(),
-                                triFrame.getTime(),
-                                triFrame.getDescription2());
-                        sensorDataReceiver.receiveSensorValues(triFrame.getValue3().getValue(),
-                                triFrame.getTime(),
-                                triFrame.getDescription3());
-                    }
-                    frame = canTrace.getNextMessage();
-                } else if (curTime >= coordTime) {
-                    sensorDataReceiver.receiveSensorValues(coord.getLatitude(), coordTime, Identifier.GPS_LAT);
-                    sensorDataReceiver.receiveSensorValues(coord.getLongitude(), coordTime, Identifier.GPS_LON);
-                    coord = gpsTrace.getNextMessage();
-                } else {
-                    sensorDataReceiver.receiveSensorValues(0, curTime, Identifier.CUR_TIME);
-                }
-
-                // This delay is added on purpose to avoid jittery ui output
-                Thread.sleep(0, nanoDelay);
-            }
-
-            while (frame != null) {
-                curTime = (System.nanoTime() - startTime) / 1000_000;
-                frameTime = frame != null ? frame.getTime() : 0;
-
-                if (curTime >= frameTime) {
-                    frame = canTrace.getNextMessage();
-                } else {
-                    sensorDataReceiver.receiveSensorValues(0, curTime, Identifier.CUR_TIME);
-                }
-
-                // This delay is added on purpose to avoid jittery ui output
-                Thread.sleep(0, nanoDelay);
-            }
-
-            while (coord != null) {
-                curTime = (System.nanoTime() - startTime) / 1000_000;
-                coordTime = coord != null ? coord.getOffset() : 0;
-
-                if (curTime >= coordTime) {
-                    sensorDataReceiver.receiveSensorValues(coord.getLatitude(), coordTime, Identifier.GPS_LAT);
-                    sensorDataReceiver.receiveSensorValues(coord.getLongitude(), coordTime, Identifier.GPS_LON);
-                    coord = gpsTrace.getNextMessage();
-                } else {
-                    sensorDataReceiver.receiveSensorValues(0, curTime, Identifier.CUR_TIME);
-                }
-
-                // This delay is added on purpose to avoid jittery ui output
-                Thread.sleep(0, nanoDelay);
-            }
         } catch (IOException e) {
             System.err.println(e.getMessage());
         } catch (InterruptedException e) {
@@ -140,6 +76,105 @@ public class CANSimulation {
         }
 
         System.out.println("End of Simulation");
+    }
+
+    private void bothFrameAndCoordPresent() throws InterruptedException {
+        double curTime;
+        double frameTime;
+        double coordTime;
+
+        while (frame != null && coord != null) {
+            curTime = (System.nanoTime() - startTime) / 1000_000;
+            frameTime = frame != null ? frame.getTime() : 0;
+            coordTime = coord != null ? coord.getOffset() : 0;
+
+            if (frameTime < coordTime && curTime >= frameTime) {
+                if (frame instanceof CANFrameSingleVal) {
+                    sendSingleFrameValue();
+                } else {
+                    sendTriFrameValues();
+                }
+                frame = canTrace.getNextMessage();
+            } else if (curTime >= coordTime) {
+                sendGPSValues(coordTime);
+                coord = gpsTrace.getNextMessage();
+            } else {
+                sensorDataReceiver.receiveSensorValues(0, curTime, Identifier.CUR_TIME);
+            }
+
+            // This delay is added on purpose to avoid jittery ui output
+            Thread.sleep(0, nanoDelay);
+        }
+    }
+
+    private void sendSingleFrameValue() {
+        CANFrameSingleVal singleFrame = (CANFrameSingleVal) frame;
+        sensorDataReceiver.receiveSensorValues(singleFrame.getValue().getValue(),
+                singleFrame.getTime(),
+                singleFrame.getDescription());
+    }
+
+    private void sendTriFrameValues() {
+        CANFrameTriVal triFrame = (CANFrameTriVal) frame;
+        sensorDataReceiver.receiveSensorValues(triFrame.getValue1().getValue(),
+                triFrame.getTime(),
+                triFrame.getDescription1());
+        sensorDataReceiver.receiveSensorValues(triFrame.getValue2().getValue(),
+                triFrame.getTime(),
+                triFrame.getDescription2());
+        sensorDataReceiver.receiveSensorValues(triFrame.getValue3().getValue(),
+                triFrame.getTime(),
+                triFrame.getDescription3());
+    }
+
+    private void sendGPSValues(double coordTime) {
+        sensorDataReceiver.receiveSensorValues(coord.getLatitude(), coordTime, Identifier.GPS_LAT);
+        sensorDataReceiver.receiveSensorValues(coord.getLongitude(), coordTime, Identifier.GPS_LON);
+    }
+
+    private void onlyFramePresent() throws InterruptedException {
+        double curTime;
+        double frameTime;
+
+        while (frame != null) {
+            curTime = (System.nanoTime() - startTime) / 1000_000;
+            frameTime = frame != null ? frame.getTime() : 0;
+
+            if (curTime >= frameTime) {
+                if (frame instanceof CANFrameSingleVal) {
+                    sendSingleFrameValue();
+                } else {
+                    sendTriFrameValues();
+                }
+                frame = canTrace.getNextMessage();
+            } else {
+                sensorDataReceiver.receiveSensorValues(0, curTime, Identifier.CUR_TIME);
+            }
+
+            // This delay is added on purpose to avoid jittery ui output
+            Thread.sleep(0, nanoDelay);
+        }
+    }
+
+    private void onlyCoordPresent() throws InterruptedException {
+        double curTime;
+        double coordTime;
+
+        while (coord != null) {
+            curTime = (System.nanoTime() - startTime) / 1000_000;
+            coordTime = coord != null ? coord.getOffset() : 0;
+
+            if (curTime >= coordTime) {
+                sensorDataReceiver.receiveSensorValues(coord.getLatitude(), coordTime, Identifier.GPS_LAT);
+                sensorDataReceiver.receiveSensorValues(coord.getLongitude(), coordTime, Identifier.GPS_LON);
+                coord = gpsTrace.getNextMessage();
+            } else {
+                sensorDataReceiver.receiveSensorValues(0, curTime, Identifier.CUR_TIME);
+            }
+
+            // This delay is added on purpose to avoid jittery ui output
+            Thread.sleep(0, nanoDelay);
+        }
     }
 
     public static void main(String[] args) {
