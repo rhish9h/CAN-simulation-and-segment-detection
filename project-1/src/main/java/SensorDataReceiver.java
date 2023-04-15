@@ -8,18 +8,18 @@ public class SensorDataReceiver {
     private String gpsLat = "-";
     private String gpsLon = "-";
 
-    public void receiveSensorValues(double sensorValue, double offset, Identifier identifier) {
+    public void receiveSensorValues(double sensorValue, double offset, String identifier) {
         curTime = String.valueOf(offset);
 
         switch (identifier) {
-            case CUR_TIME -> doNothing();
-            case VEH_SPEED -> vehSpeed = String.valueOf(sensorValue);
-            case STR_ANGLE -> strAngle = String.valueOf(sensorValue);
-            case YAW_RATE -> yawRate = String.valueOf(sensorValue);
-            case LAT_ACCEL -> latAccel = String.valueOf(sensorValue);
-            case LON_ACCEL -> lonAccel = String.valueOf(sensorValue);
-            case GPS_LAT -> gpsLat = String.valueOf(sensorValue);
-            case GPS_LON -> gpsLon = String.valueOf(sensorValue);
+            case Identifier.CUR_TIME -> doNothing();
+            case Identifier.VEH_SPEED -> vehSpeed = String.valueOf(sensorValue);
+            case Identifier.STR_ANGLE -> strAngle = String.valueOf(sensorValue);
+            case Identifier.YAW_RATE -> yawRate = String.valueOf(sensorValue);
+            case Identifier.LAT_ACCEL -> latAccel = String.valueOf(sensorValue);
+            case Identifier.LON_ACCEL -> lonAccel = String.valueOf(sensorValue);
+            case Identifier.GPS_LAT -> gpsLat = String.valueOf(sensorValue);
+            case Identifier.GPS_LON -> gpsLon = String.valueOf(sensorValue);
         }
 
         printData();
