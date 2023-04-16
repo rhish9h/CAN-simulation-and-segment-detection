@@ -1,4 +1,6 @@
-//TODO add javadoc
+/**
+ * POJO to store GPS coordinate data
+ */
 public class GPSCoordinate {
     private double offset;
     private double latitude;

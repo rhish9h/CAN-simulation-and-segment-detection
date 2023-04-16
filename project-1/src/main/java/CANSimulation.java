@@ -1,14 +1,12 @@
 import java.io.IOException;
 import java.util.Scanner;
 
-//TODO update this javadoc and check if any other javadoc needs update
 /**
  * Holds the main method used to perform the simulation.
  * Simulation includes -
- * 1. parsing the given file
- * 2. getting next 30 messages and printing them
- * 3. resetting next message
- * 4. getting next 5 messages and printing them
+ * 1. parsing the CAN trace file
+ * 2. parsing the GPS trace file
+ * 3. simulating real time data sensing
  */
 public class CANSimulation {
     private CANTrace canTrace;
@@ -21,37 +19,21 @@ public class CANSimulation {
     private CANFrame frame;
     private GPSCoordinate coord;
 
+    /**
+     * Initiate values required for the simulation
+     */
     public CANSimulation() {
         sc = new Scanner(System.in);
         sensorDataReceiver = new SensorDataReceiver();
     }
 
-    public void parseCANData() throws IOException {
-        System.out.println("Please enter file name of CAN Data (Press ENTER to use default file):");
-        String fileName = sc.nextLine();
-
-        if (fileName.trim().equals("")) {
-            fileName = "src/main/resources/18 CANmessages.trc";
-        }
-
-        System.out.println("Parsing file: " + fileName);
-        CANTraceParser canTraceParser = new CANTraceParser();
-        canTrace = canTraceParser.parseCANTraceFile(fileName);
-    }
-
-    public void parseGPSData() throws IOException {
-        System.out.println("Please enter file name of GPS Data (Press ENTER to use default file):");
-        String fileName = sc.nextLine();
-
-        if (fileName.trim().equals("")) {
-            fileName = "src/main/resources/GPStrace.txt";
-        }
-
-        System.out.println("Parsing file: " + fileName);
-        GPSParser gpsParser = new GPSParser();
-        gpsTrace = gpsParser.parseGPSTraceFile(fileName);
-    }
-
+    /**
+     * Starting point of the simulation
+     * Parses CAN data and GPS data
+     * Gets first CAN frame from CAN data and first GPS coordinate from GPS data
+     * Loops through data depending on whether both frame and coordinate are present,
+     * or if only frame is present or if only coordinate is present
+     */
     public void startSimulation() {
         System.out.println("Start of Simulation");
 
@@ -81,6 +63,45 @@ public class CANSimulation {
         System.out.println("End of Simulation");
     }
 
+    /**
+     * Parse CAN data into CAN Trace
+     * @throws IOException if file cannot be parsed
+     */
+    public void parseCANData() throws IOException {
+        System.out.println("Please enter file name of CAN Data (Press ENTER to use default file):");
+        String fileName = sc.nextLine();
+
+        if (fileName.trim().equals("")) {
+            fileName = "src/main/resources/18 CANmessages.trc";
+        }
+
+        System.out.println("Parsing file: " + fileName);
+        CANTraceParser canTraceParser = new CANTraceParser();
+        canTrace = canTraceParser.parseCANTraceFile(fileName);
+    }
+
+    /**
+     * Parse GPS data into GPS Trace
+     * @throws IOException if file cannot be parsed
+     */
+    public void parseGPSData() throws IOException {
+        System.out.println("Please enter file name of GPS Data (Press ENTER to use default file):");
+        String fileName = sc.nextLine();
+
+        if (fileName.trim().equals("")) {
+            fileName = "src/main/resources/GPStrace.txt";
+        }
+
+        System.out.println("Parsing file: " + fileName);
+        GPSParser gpsParser = new GPSParser();
+        gpsTrace = gpsParser.parseGPSTraceFile(fileName);
+    }
+
+    /**
+     * If both frame and coordinate are present check for the smallest of the two
+     * then if current time is greater, send the previously found smaller value
+     * @throws InterruptedException if thread cannot sleep when required
+     */
     private void bothFrameAndCoordPresent() throws InterruptedException {
         double curTime;
         double frameTime;
@@ -110,6 +131,9 @@ public class CANSimulation {
         }
     }
 
+    /**
+     * Send only one value if it's a single frame
+     */
     private void sendSingleFrameValue() {
         CANFrameSingleVal singleFrame = (CANFrameSingleVal) frame;
         sensorDataReceiver.receiveSensorValues(singleFrame.getValue().getValue(),
@@ -117,6 +141,9 @@ public class CANSimulation {
                 singleFrame.getDescription());
     }
 
+    /**
+     * Send all three values if it's a tri frame
+     */
     private void sendTriFrameValues() {
         CANFrameTriVal triFrame = (CANFrameTriVal) frame;
         sensorDataReceiver.receiveSensorValues(triFrame.getValue1().getValue(),
@@ -130,11 +157,19 @@ public class CANSimulation {
                 triFrame.getDescription3());
     }
 
+    /**
+     * Send both latitude and longitude GPS values
+     * @param coordTime offset
+     */
     private void sendGPSValues(double coordTime) {
         sensorDataReceiver.receiveSensorValues(coord.getLatitude(), coordTime, Identifier.GPS_LAT);
         sensorDataReceiver.receiveSensorValues(coord.getLongitude(), coordTime, Identifier.GPS_LON);
     }
 
+    /**
+     * If only frames are present, loop through them and send once current time has passed their offsets
+     * @throws InterruptedException if thread cannot sleep when required
+     */
     private void onlyFramePresent() throws InterruptedException {
         double curTime;
         double frameTime;
@@ -159,6 +194,10 @@ public class CANSimulation {
         }
     }
 
+    /**
+     * If only coordinates are present, loop through them and send once current time has passed their offsets
+     * @throws InterruptedException if thread cannot sleep when required
+     */
     private void onlyCoordPresent() throws InterruptedException {
         double curTime;
         double coordTime;
@@ -180,6 +219,10 @@ public class CANSimulation {
         }
     }
 
+    /**
+     * Driver for the simulation
+     * @param args arguments passed to the program
+     */
     public static void main(String[] args) {
         CANSimulation canSimulation = new CANSimulation();
         canSimulation.startSimulation();

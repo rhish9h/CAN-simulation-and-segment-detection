@@ -1,3 +1,6 @@
+/**
+ * Identifier constants stored in one place to avoid confusion and errors
+ */
 public class Identifier {
     public static final String CUR_TIME = "Current Time";
     public static final String VEH_SPEED = "Displayed vehicle speed";

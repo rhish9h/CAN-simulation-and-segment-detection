@@ -3,11 +3,19 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-//TODO add javadoc
+/**
+ * Parser that reads GPS data from given file and parses into GPS Trace
+ */
 public class GPSParser {
     private int index = 0;
 
     //TODO print parsing statistics
+    /**
+     * Public api used to parse given file and fetch the generated GPS Trace
+     * @param gpsFile file that needs to be read
+     * @return GPSTrace object
+     * @throws IOException when file cannot be read
+     */
     public GPSTrace parseGPSTraceFile(String gpsFile) throws IOException{
         GPSTrace gpsTrace = new GPSTrace();
 
