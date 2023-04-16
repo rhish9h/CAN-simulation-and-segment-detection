@@ -28,7 +28,7 @@ public class SensorDataReceiver {
     private void doNothing() {}
 
     private void printData() {
-        System.out.format("%s ms | %s km/h | %s deg | %s deg/sec | %s m/sec^s | %s m/sec^s | %s %s \r",
-                curTime, vehSpeed, strAngle, yawRate, latAccel, lonAccel, gpsLat, gpsLon);
+        System.out.print(String.format("%20s ms | %10s km/h | %10s deg | %10s deg/sec | %10s m/sec^s | %10s m/sec^s | %15s %15s \r",
+                curTime, vehSpeed, strAngle, yawRate, latAccel, lonAccel, gpsLat, gpsLon));
     }
 }

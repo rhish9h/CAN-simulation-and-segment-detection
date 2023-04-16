@@ -16,7 +16,8 @@ public class CANSimulation {
     private Scanner sc;
     private double startTime;
     private SensorDataReceiver sensorDataReceiver;
-    private final int nanoDelay = 500;
+    private final int milliDelay = 0;
+    private final int nanoDelay = 100;
     private CANFrame frame;
     private GPSCoordinate coord;
 
@@ -60,6 +61,8 @@ public class CANSimulation {
 
             System.out.println("Press enter to start simulation");
             sc.nextLine();
+            System.out.format("   %20s |   %10s |    %10s |         %10s |         %10s |         %10s |  %30s \n",
+                    "Current Time", "Vehicle Speed", "Steer Angle", "Yaw Rate", "Lat Accel", "Long Accel", "GPS Lat/Long");
 
             frame = canTrace.getNextMessage();
             coord = gpsTrace.getNextMessage();
@@ -103,7 +106,7 @@ public class CANSimulation {
             }
 
             // This delay is added on purpose to avoid jittery ui output
-            Thread.sleep(0, nanoDelay);
+            Thread.sleep(milliDelay, nanoDelay);
         }
     }
 
@@ -152,7 +155,7 @@ public class CANSimulation {
             }
 
             // This delay is added on purpose to avoid jittery ui output
-            Thread.sleep(0, nanoDelay);
+            Thread.sleep(milliDelay, nanoDelay);
         }
     }
 
@@ -173,7 +176,7 @@ public class CANSimulation {
             }
 
             // This delay is added on purpose to avoid jittery ui output
-            Thread.sleep(0, nanoDelay);
+            Thread.sleep(milliDelay, nanoDelay);
         }
     }
 
