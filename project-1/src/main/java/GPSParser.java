@@ -35,6 +35,8 @@ public class GPSParser {
 
                 index ++;
             }
+
+            System.out.println("Parsed GPS data.\n");
         }
         catch(FileNotFoundException e){
             throw new IOException("The gps file was not found!", e);
