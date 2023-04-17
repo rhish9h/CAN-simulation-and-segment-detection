@@ -9,7 +9,6 @@ import java.io.IOException;
 public class GPSParser {
     private int index = 0;
 
-    //TODO print parsing statistics
     /**
      * Public api used to parse given file and fetch the generated GPS Trace
      * @param gpsFile file that needs to be read
