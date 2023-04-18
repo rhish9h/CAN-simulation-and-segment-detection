@@ -13,7 +13,7 @@ public class CANFramesInfo {
                 List.of(new SensorInfo(
                         new DataFieldLocation(6, 0, 7, 5),
                         14,
-                        "Steering wheel angle",
+                        Identifier.STR_ANGLE,
                         16383,
                         new Range(-2048, 2047),
                         new FrameVal(0.5, "deg")
@@ -22,7 +22,7 @@ public class CANFramesInfo {
                 List.of(new SensorInfo(
                         new DataFieldLocation(6, 0, 7, 3),
                         12,
-                        "Displayed vehicle speed",
+                        Identifier.VEH_SPEED,
                         4095,
                         new Range(0, 409.4),
                         new FrameVal(0.1, "km/h")
@@ -31,21 +31,21 @@ public class CANFramesInfo {
                 List.of(new SensorInfo(
                         new DataFieldLocation(6, 0, 7, 7),
                         16,
-                        "Vehicle yaw rate",
+                        Identifier.YAW_RATE,
                         65535,
                         new Range(-327.68, 327.66),
                         new FrameVal(0.01, "deg/sec")
                 ), new SensorInfo(
                         new DataFieldLocation(3, 0, 3, 7),
                         8,
-                        "Vehicle longitudinal acceleration",
+                        Identifier.LON_ACCEL,
                         255,
                         new Range(-10.24, 10.08),
                         new FrameVal(0.08, "m/sec^2")
                 ), new SensorInfo(
                         new DataFieldLocation(2, 0, 2, 7),
                         8,
-                        "Vehicle lateral acceleration",
+                        Identifier.LAT_ACCEL,
                         255,
                         new Range(-10.24, 10.08),
                         new FrameVal(0.08, "m/sec^2")
