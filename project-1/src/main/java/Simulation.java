@@ -8,7 +8,7 @@ import java.util.Scanner;
  * 2. parsing the GPS trace file
  * 3. simulating real time data sensing
  */
-public class CANSimulation {
+public class Simulation {
     private CANTrace canTrace;
     private GPSTrace gpsTrace;
     private Scanner sc;
@@ -22,7 +22,7 @@ public class CANSimulation {
     /**
      * Initiate values required for the simulation
      */
-    public CANSimulation() {
+    public Simulation() {
         sc = new Scanner(System.in);
         sensorDataReceiver = new SensorDataReceiver();
     }
@@ -228,7 +228,7 @@ public class CANSimulation {
      * @param args arguments passed to the program
      */
     public static void main(String[] args) {
-        CANSimulation canSimulation = new CANSimulation();
-        canSimulation.startSimulation();
+        Simulation simulation = new Simulation();
+        simulation.startSimulation();
     }
 }
