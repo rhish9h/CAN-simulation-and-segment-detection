@@ -18,17 +18,17 @@ public class SensorDataReceiver {
      * @param identifier description to identify which sensor's data it is
      */
     public void receiveSensorValues(double sensorValue, double offset, String identifier) {
-        curTime = String.valueOf(offset);
+        curTime = String.format("%14.6f", offset);
 
         switch (identifier) {
             case Identifier.CUR_TIME -> doNothing();
-            case Identifier.VEH_SPEED -> vehSpeed = String.valueOf(sensorValue);
-            case Identifier.STR_ANGLE -> strAngle = String.valueOf(sensorValue);
-            case Identifier.YAW_RATE -> yawRate = String.valueOf(sensorValue);
-            case Identifier.LAT_ACCEL -> latAccel = String.valueOf(sensorValue);
-            case Identifier.LON_ACCEL -> lonAccel = String.valueOf(sensorValue);
-            case Identifier.GPS_LAT -> gpsLat = String.valueOf(sensorValue);
-            case Identifier.GPS_LON -> gpsLon = String.valueOf(sensorValue);
+            case Identifier.VEH_SPEED -> vehSpeed = String.format("%8.2f", sensorValue);
+            case Identifier.STR_ANGLE -> strAngle = String.format("%8.2f", sensorValue);
+            case Identifier.YAW_RATE -> yawRate = String.format("%8.2f", sensorValue);
+            case Identifier.LAT_ACCEL -> latAccel = String.format("%8.2f", sensorValue);
+            case Identifier.LON_ACCEL -> lonAccel = String.format("%8.2f", sensorValue);
+            case Identifier.GPS_LAT -> gpsLat = String.format("%14.6f", sensorValue);
+            case Identifier.GPS_LON -> gpsLon = String.format("%14.6f", sensorValue);
         }
 
         printData();
