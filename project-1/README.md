@@ -7,7 +7,7 @@
 Since this is a maven project, the recommended method to run this project is 
 loading the maven project in an IDE.
 1. Load maven project in IDE (preferably Intellij)
-2. Run main from CANSimulation
+2. Run main from Simulation
 
 Note:
 1. Since the code uses carriage return to print on the same line to mimic
@@ -18,8 +18,8 @@ however it might not load if program is run by cli without loading the project.
 
 ### How to run program using CLI:
 1. cd project-1/src/main/java
-2. javac CANSimulation.java
-3. java CANSimulation
+2. javac Simulation.java
+3. java Simulation
 
 Note:
 1. If the program is run via CLI, the default files will not work as the resources

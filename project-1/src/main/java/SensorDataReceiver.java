@@ -1,7 +1,9 @@
+import java.util.Observable;
+
 /**
  * Receiver of sensor data, prints data in the right format once received
  */
-public class SensorDataReceiver {
+public class SensorDataReceiver extends Observable {
     private String curTime = "-";
     private String vehSpeed = "-";
     private String strAngle = "-";
@@ -18,19 +20,22 @@ public class SensorDataReceiver {
      * @param identifier description to identify which sensor's data it is
      */
     public void receiveSensorValues(double sensorValue, double offset, String identifier) {
-        curTime = String.valueOf(offset);
+        curTime = String.format("%14.6f", offset);
 
         switch (identifier) {
             case Identifier.CUR_TIME -> doNothing();
-            case Identifier.VEH_SPEED -> vehSpeed = String.valueOf(sensorValue);
-            case Identifier.STR_ANGLE -> strAngle = String.valueOf(sensorValue);
-            case Identifier.YAW_RATE -> yawRate = String.valueOf(sensorValue);
-            case Identifier.LAT_ACCEL -> latAccel = String.valueOf(sensorValue);
-            case Identifier.LON_ACCEL -> lonAccel = String.valueOf(sensorValue);
-            case Identifier.GPS_LAT -> gpsLat = String.valueOf(sensorValue);
-            case Identifier.GPS_LON -> gpsLon = String.valueOf(sensorValue);
+            case Identifier.VEH_SPEED -> vehSpeed = String.format("%8.2f", sensorValue);
+            case Identifier.STR_ANGLE -> strAngle = String.format("%8.2f", sensorValue);
+            case Identifier.YAW_RATE -> yawRate = String.format("%8.2f", sensorValue);
+            case Identifier.LAT_ACCEL -> latAccel = String.format("%8.2f", sensorValue);
+            case Identifier.LON_ACCEL -> lonAccel = String.format("%8.2f", sensorValue);
+            case Identifier.GPS_LAT -> gpsLat = String.format("%14.6f", sensorValue);
+            case Identifier.GPS_LON -> gpsLon = String.format("%14.6f", sensorValue);
         }
 
+        setChanged();
+        notifyObservers(String.format("%20s ms | %10s km/h | %10s deg | %10s deg/sec | %10s m/sec^s | %10s m/sec^s | %15s %15s \r",
+                curTime, vehSpeed, strAngle, yawRate, latAccel, lonAccel, gpsLat, gpsLon));
         printData();
     }
 

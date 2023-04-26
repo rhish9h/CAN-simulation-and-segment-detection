@@ -8,7 +8,7 @@ import java.util.Scanner;
  * 2. parsing the GPS trace file
  * 3. simulating real time data sensing
  */
-public class CANSimulation {
+public class Simulation {
     private CANTrace canTrace;
     private GPSTrace gpsTrace;
     private Scanner sc;
@@ -16,13 +16,17 @@ public class CANSimulation {
     private SensorDataReceiver sensorDataReceiver;
     private final int milliDelay = 0;
     private final int nanoDelay = 100;
+    private final int simulationPauseDelay = 100;
     private CANFrame frame;
     private GPSCoordinate coord;
+    // If paused is true, the simulation will stall, else it will continue
+    // It is public so the GUI button action can modify it
+    public static boolean paused = true;
 
     /**
      * Initiate values required for the simulation
      */
-    public CANSimulation() {
+    public Simulation() {
         sc = new Scanner(System.in);
         sensorDataReceiver = new SensorDataReceiver();
     }
@@ -43,6 +47,10 @@ public class CANSimulation {
 
             System.out.println("Press enter to start simulation");
             sc.nextLine();
+
+            SimulationGUI simulationGUI = new SimulationGUI();
+            sensorDataReceiver.addObserver(simulationGUI);
+
             System.out.format("   %20s |   %10s |    %10s |         %10s |         %10s |         %10s |  %30s \n",
                     "Current Time", "Vehicle Speed", "Steer Angle", "Yaw Rate", "Lat Accel", "Long Accel", "GPS Lat/Long");
 
@@ -108,6 +116,11 @@ public class CANSimulation {
         double coordTime;
 
         while (frame != null && coord != null) {
+            if (paused) {
+                Thread.sleep(simulationPauseDelay);
+                continue;
+            }
+
             curTime = (System.nanoTime() - startTime) / 1000_000;
             frameTime = frame != null ? frame.getTime() : 0;
             coordTime = coord != null ? coord.getOffset() : 0;
@@ -175,6 +188,11 @@ public class CANSimulation {
         double frameTime;
 
         while (frame != null) {
+            if (paused) {
+                Thread.sleep(simulationPauseDelay);
+                continue;
+            }
+
             curTime = (System.nanoTime() - startTime) / 1000_000;
             frameTime = frame != null ? frame.getTime() : 0;
 
@@ -203,6 +221,11 @@ public class CANSimulation {
         double coordTime;
 
         while (coord != null) {
+            if (paused) {
+                Thread.sleep(simulationPauseDelay);
+                continue;
+            }
+
             curTime = (System.nanoTime() - startTime) / 1000_000;
             coordTime = coord != null ? coord.getOffset() : 0;
 
@@ -224,7 +247,7 @@ public class CANSimulation {
      * @param args arguments passed to the program
      */
     public static void main(String[] args) {
-        CANSimulation canSimulation = new CANSimulation();
-        canSimulation.startSimulation();
+        Simulation simulation = new Simulation();
+        simulation.startSimulation();
     }
 }
