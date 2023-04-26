@@ -16,8 +16,12 @@ public class Simulation {
     private SensorDataReceiver sensorDataReceiver;
     private final int milliDelay = 0;
     private final int nanoDelay = 100;
+    private final int simulationPauseDelay = 100;
     private CANFrame frame;
     private GPSCoordinate coord;
+    // If paused is true, the simulation will stall, else it will continue
+    // It is public so the GUI button action can modify it
+    public static boolean paused = true;
 
     /**
      * Initiate values required for the simulation
@@ -112,6 +116,11 @@ public class Simulation {
         double coordTime;
 
         while (frame != null && coord != null) {
+            if (paused) {
+                Thread.sleep(simulationPauseDelay);
+                continue;
+            }
+
             curTime = (System.nanoTime() - startTime) / 1000_000;
             frameTime = frame != null ? frame.getTime() : 0;
             coordTime = coord != null ? coord.getOffset() : 0;
@@ -179,6 +188,11 @@ public class Simulation {
         double frameTime;
 
         while (frame != null) {
+            if (paused) {
+                Thread.sleep(simulationPauseDelay);
+                continue;
+            }
+
             curTime = (System.nanoTime() - startTime) / 1000_000;
             frameTime = frame != null ? frame.getTime() : 0;
 
@@ -207,6 +221,11 @@ public class Simulation {
         double coordTime;
 
         while (coord != null) {
+            if (paused) {
+                Thread.sleep(simulationPauseDelay);
+                continue;
+            }
+
             curTime = (System.nanoTime() - startTime) / 1000_000;
             coordTime = coord != null ? coord.getOffset() : 0;
 

@@ -14,7 +14,7 @@ public class SimulationGUI extends JFrame implements Observer {
         setSize(1280, 720);
 
         JLabel simulationDataHeading = getSimulationDataHeading();
-        simulationData = new JLabel("[Placeholder for simulation data]");
+        simulationData = new JLabel(String.format("%100s", "[Click Play to start Simulation]"));
         simulationData.setFont(new Font("Monospaced", Font.PLAIN, 12));
 
         // Create a panel to hold the table.
@@ -45,7 +45,7 @@ public class SimulationGUI extends JFrame implements Observer {
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                Simulation.paused = !Simulation.paused;
             }
         });
 
