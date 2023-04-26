@@ -12,10 +12,10 @@ public class SimulationGUI extends JFrame implements Observer {
         super("Simulation");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1280, 720);
-        String heading = String.format("   %20s |   %10s |    %10s |         %10s |         %10s |         %10s |  %30s \n",
-                "Current Time", "Vehicle Speed", "Steer Angle", "Yaw Rate", "Lat Accel", "Long Accel", "GPS Lat/Long");
-        JLabel simulationDataHeading = new JLabel(heading);
+
+        JLabel simulationDataHeading = getSimulationDataHeading();
         simulationData = new JLabel("[Placeholder for simulation data]");
+        simulationData.setFont(new Font("Monospaced", Font.PLAIN, 12));
 
         // Create a panel to hold the table.
         JPanel panel = new JPanel(new GridLayout(2, 1));
@@ -29,6 +29,14 @@ public class SimulationGUI extends JFrame implements Observer {
 
         // Make the frame visible.
         setVisible(true);
+    }
+
+    private JLabel getSimulationDataHeading() {
+        String heading = String.format("   %20s |   %10s |    %10s |         %10s |         %10s |         %10s |  %30s \n",
+                "Current Time", "Vehicle Speed", "Steer Angle", "Yaw Rate", "Lat Accel", "Long Accel", "GPS Lat/Long");
+        JLabel simulationDataHeading = new JLabel(heading);
+        simulationDataHeading.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        return simulationDataHeading;
     }
 
     private void addPlayButton() {
