@@ -1,7 +1,9 @@
+import java.util.Observable;
+
 /**
  * Receiver of sensor data, prints data in the right format once received
  */
-public class SensorDataReceiver {
+public class SensorDataReceiver extends Observable {
     private String curTime = "-";
     private String vehSpeed = "-";
     private String strAngle = "-";
@@ -31,6 +33,9 @@ public class SensorDataReceiver {
             case Identifier.GPS_LON -> gpsLon = String.format("%14.6f", sensorValue);
         }
 
+        setChanged();
+        notifyObservers(String.format("%20s ms | %10s km/h | %10s deg | %10s deg/sec | %10s m/sec^s | %10s m/sec^s | %15s %15s \r",
+                curTime, vehSpeed, strAngle, yawRate, latAccel, lonAccel, gpsLat, gpsLon));
         printData();
     }
 
