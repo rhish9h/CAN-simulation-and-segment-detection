@@ -43,6 +43,9 @@ public class CANSimulation {
 
             System.out.println("Press enter to start simulation");
             sc.nextLine();
+
+            SimulationGUI simulationGUI = new SimulationGUI();
+
             System.out.format("   %20s |   %10s |    %10s |         %10s |         %10s |         %10s |  %30s \n",
                     "Current Time", "Vehicle Speed", "Steer Angle", "Yaw Rate", "Lat Accel", "Long Accel", "GPS Lat/Long");
 
