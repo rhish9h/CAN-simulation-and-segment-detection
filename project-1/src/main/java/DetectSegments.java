@@ -23,7 +23,7 @@ public class DetectSegments {
             if(currentlyStraight){
                 if((currentTotal / 10.0) > 3.0 || (currentTotal / 10.0) < -3.0){
                     currentlyStraight = false;
-                    System.out.println("Straight segment has ended, curved segment begins");
+                    Simulation.paused = true;
                     currentTotal = 0;
                     yawValues.clear();
                 }
@@ -31,7 +31,7 @@ public class DetectSegments {
             else{
                 if(-3.0 < (currentTotal / 10.0) && (currentTotal / 10.0) < 3.0){
                     currentlyStraight = true;
-                    System.out.println("Curved segment has ended, straight segment begins");
+                    Simulation.paused = true;
                     currentTotal = 0;
                     yawValues.clear();
                 }

@@ -13,6 +13,8 @@ public class SensorDataReceiver extends Observable {
     private String gpsLat = "-";
     private String gpsLon = "-";
 
+    private DetectSegments detection = new DetectSegments();
+    
     /**
      * Public API to receive sensor values and print them in the right format
      * @param sensorValue magnitude/value of the sensor reading
@@ -31,6 +33,10 @@ public class SensorDataReceiver extends Observable {
             case Identifier.LON_ACCEL -> lonAccel = String.format("%8.2f", sensorValue);
             case Identifier.GPS_LAT -> gpsLat = String.format("%14.6f", sensorValue);
             case Identifier.GPS_LON -> gpsLon = String.format("%14.6f", sensorValue);
+        }
+
+        if(yawRate != "-"){
+           detection.newValue(Double.parseDouble(yawRate)); 
         }
 
         setChanged();
