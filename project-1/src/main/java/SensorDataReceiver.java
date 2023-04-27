@@ -35,8 +35,8 @@ public class SensorDataReceiver extends Observable {
             case Identifier.GPS_LON -> gpsLon = String.format("%14.6f", sensorValue);
         }
 
-        if(yawRate != "-"){
-           detection.newValue(Double.parseDouble(yawRate)); //this returns a boolean when a new segment occurs
+        if(yawRate != "-" && latAccel != "-"){
+           detection.newValue(Double.parseDouble(yawRate), Double.parseDouble(latAccel)); //this returns a boolean when a new segment occurs
         }
 
         setChanged();

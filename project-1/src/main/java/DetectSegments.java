@@ -4,62 +4,81 @@ import java.util.Queue;
 
 public class DetectSegments {
     Queue<Double> yawValues;
-    double currentTotal;
+    double currentTotalYAW;
+    Queue<Double> accelValues;
+    double currentTotalACCEL;
     boolean currentlyStraight;
 
     public DetectSegments(){
         yawValues = new LinkedList<>();
-        currentTotal = 0.0;
+        accelValues = new LinkedList<>();
+        currentTotalYAW = 0.0;
+        currentTotalACCEL = 0.0;
         currentlyStraight = true;
     }
 
-    public boolean newValue(double value){
-        if(yawValues.size() == 10){
+    public boolean newValue(double valueYAW, double valueACCEL){
+        if(yawValues.size() == 10 && accelValues.size() == 10){
 
-            currentTotal = currentTotal - yawValues.peek();
+            currentTotalYAW = currentTotalYAW - yawValues.peek();
             yawValues.remove();
-            yawValues.add(value);
-            currentTotal = currentTotal + value;
+            yawValues.add(valueYAW);
+            currentTotalYAW = currentTotalYAW + valueYAW;
+
+            currentTotalACCEL = currentTotalACCEL - accelValues.peek();
+            accelValues.remove();
+            accelValues.add(valueACCEL);
+            currentTotalACCEL = currentTotalACCEL + valueACCEL;
 
             if(currentlyStraight){
-                if((currentTotal / 10.0) > 5.0 || (currentTotal / 10.0) < -5.0){
+                if((currentTotalYAW / 10.0) > 5.0 || (currentTotalYAW / 10.0) < -5.0){
                     currentlyStraight = false;
 
-                    /* 
+                    /*
                     Code for testing segments, should be removed before submission
+                    */
 
                     Simulation.paused = true;
-                    if(currentTotal > 5.0){
+                    if(currentTotalYAW > 5.0){
                         System.out.println("Now on a left turn segment");    
                     }
 
-                    if(currentTotal < -5.0){
+                    if(currentTotalYAW < -5.0){
                         System.out.println("Now on a right turn segment"); 
                     }
-                    */
+                    
 
-                    currentTotal = 0.0;
+                    currentTotalYAW = 0.0;
                     yawValues.clear();
+                    currentTotalACCEL = 0.0;
+                    accelValues.clear();
                     return true;
                 }
                 else{
                     return false;
                 }
             }else{
-                if(-5.0 < (currentTotal / 10.0) && (currentTotal / 10.0) < 5.0){
-                    currentlyStraight = true;
+                if(-5.0 < (currentTotalYAW / 10.0) && (currentTotalYAW / 10.0) < 5.0){
+                    if(-0.5 < (currentTotalACCEL / 10.0) && (currentTotalACCEL / 10.0) < 0.5){
+                       currentlyStraight = true; 
+                       /* 
+                        Code for testing segments, should be removed before submission
+                        */
 
-                    /* 
-                    Code for testing segments, should be removed upon submission
+                        Simulation.paused = true;
+                        System.out.println("Now on a straight segment");
+                    
 
-                    Simulation.paused = true;
-                    System.out.println("Now on a straight segment");
-                    */
+                        currentTotalYAW = 0.0;
+                        yawValues.clear();
+                        currentTotalACCEL = 0.0;
+                        accelValues.clear();
 
-                    currentTotal = 0.0;
-                    yawValues.clear();
-
-                    return true;
+                        return true;
+                    }
+                    else{
+                        return false;
+                    }
                 }
                 else{
                     return false;
@@ -67,8 +86,12 @@ public class DetectSegments {
             }
         }
         else{
-            yawValues.add(value);
-            currentTotal = currentTotal + value;
+
+            yawValues.add(valueYAW);
+            currentTotalYAW = currentTotalYAW + valueYAW;
+
+            accelValues.add(valueACCEL);
+            currentTotalACCEL = currentTotalACCEL + valueACCEL;
             return false;
         }
     }
