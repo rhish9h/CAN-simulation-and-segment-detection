@@ -36,7 +36,7 @@ public class SensorDataReceiver extends Observable {
         }
 
         if(yawRate != "-"){
-           detection.newValue(Double.parseDouble(yawRate)); 
+           detection.newValue(Double.parseDouble(yawRate)); //this returns a boolean when a new segment occurs
         }
 
         setChanged();
