@@ -1,5 +1,5 @@
-import java.util.Collection;
-import java.util.PriorityQueue;
+
+import java.util.LinkedList;
 import java.util.Queue;
 
 public class DetectSegments {
@@ -8,31 +8,31 @@ public class DetectSegments {
     boolean currentlyStraight;
 
     public DetectSegments(){
-        yawValues = new PriorityQueue<>(10);
-        currentTotal = 0;
+        yawValues = new LinkedList<>();
+        currentTotal = 0.0;
         currentlyStraight = true;
     }
 
     public void newValue(double value){
         if(yawValues.size() == 10){
+
             currentTotal = currentTotal - yawValues.peek();
             yawValues.remove();
             yawValues.add(value);
             currentTotal = currentTotal + value;
 
             if(currentlyStraight){
-                if((currentTotal / 10.0) > 3.0 || (currentTotal / 10.0) < -3.0){
+                if((currentTotal / 10.0) > 5.0 || (currentTotal / 10.0) < -5.0){
                     currentlyStraight = false;
                     Simulation.paused = true;
-                    currentTotal = 0;
+                    currentTotal = 0.0;
                     yawValues.clear();
                 }
-            }
-            else{
-                if(-3.0 < (currentTotal / 10.0) && (currentTotal / 10.0) < 3.0){
+            }else{
+                if(-5.0 < (currentTotal / 10.0) && (currentTotal / 10.0) < 5.0){
                     currentlyStraight = true;
                     Simulation.paused = true;
-                    currentTotal = 0;
+                    currentTotal = 0.0;
                     yawValues.clear();
                 }
             }
