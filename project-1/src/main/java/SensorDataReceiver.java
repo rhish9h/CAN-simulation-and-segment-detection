@@ -13,7 +13,6 @@ public class SensorDataReceiver extends Observable {
     private double gpsLat = 0.0;
     private double gpsLon = 0.0;
     private String segment;
-
     private SegmentDetector detector;
 
     public SensorDataReceiver(SegmentDetector detector) {
@@ -40,10 +39,8 @@ public class SensorDataReceiver extends Observable {
             case Identifier.GPS_LON -> gpsLon = sensorValue;
         }
 
-        if(yawRate != 0.0 && latAccel != 0.0){
-            segment = detector.parseValue(yawRate, latAccel);
-        }
-
+        segment = detector.parse(new SensorData(curTime, vehSpeed, strAngle, yawRate,
+                latAccel, lonAccel, gpsLat, gpsLon));
         setChanged();
         notifyObservers(new SimulationDTO(getFormattedSensorData(), segment));
         printData();

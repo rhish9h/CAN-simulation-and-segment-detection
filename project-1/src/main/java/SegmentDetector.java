@@ -20,20 +20,20 @@ public class SegmentDetector {
         currentlyStraight = true;
     }
 
-    public String parseValue(double yawRate, double latAccel){
+    public String parse(SensorData sensorData){
         segment = null;
 
         if(yawValues.size() == windowSize && accelValues.size() == windowSize){
 
             totalYaw -= yawValues.peek();
             yawValues.remove();
-            yawValues.add(yawRate);
-            totalYaw += yawRate;
+            yawValues.add(sensorData.getYawRate());
+            totalYaw += sensorData.getYawRate();
 
             totalAccel -= accelValues.peek();
             accelValues.remove();
-            accelValues.add(latAccel);
-            totalAccel += latAccel;
+            accelValues.add(sensorData.getLatAccel());
+            totalAccel += sensorData.getLatAccel();
 
             double avgYaw = totalYaw / windowSize;
             double avgAccel = totalAccel / windowSize;
@@ -80,11 +80,11 @@ public class SegmentDetector {
                 }
             }
         } else{
-            yawValues.add(yawRate);
-            totalYaw = totalYaw + yawRate;
+            yawValues.add(sensorData.getYawRate());
+            totalYaw = totalYaw + sensorData.getYawRate();
 
-            accelValues.add(latAccel);
-            totalAccel = totalAccel + latAccel;
+            accelValues.add(sensorData.getLatAccel());
+            totalAccel = totalAccel + sensorData.getLatAccel();
             return null;
         }
 
