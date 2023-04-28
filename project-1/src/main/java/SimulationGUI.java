@@ -12,7 +12,7 @@ public class SimulationGUI extends JFrame implements Observer {
     public SimulationGUI() {
         super("Simulation");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1200, 700);
+        setSize(1400, 700);
 
         simulationData = new JLabel(String.format("%100s", "[Click Play to start Simulation]"));
         simulationData.setFont(new Font("Monospaced", Font.PLAIN, 12));
@@ -24,6 +24,8 @@ public class SimulationGUI extends JFrame implements Observer {
         panel.add(simulationData);
         panel.add(new JLabel("\n"));
         panel.add(getSegmentsHeading());
+        panel.add(new JLabel(" ---------------------------------------------------------------------------------" +
+                "--------------------------------------------------------------------------------"));
 
         // Add the panel to the frame.
         add(panel, BorderLayout.NORTH);
@@ -52,9 +54,10 @@ public class SimulationGUI extends JFrame implements Observer {
     }
 
     private JLabel getSegmentsHeading() {
-        String segmentsHeading = String.format(" %12s | %19s | %19s | %10s | %10s | %10s | %10s | %10s | %10s | %10s",
-                "Segment Type", "GPS Start Lat/Lon", "GPS End Lat/Lon", "Avg Veh Speed", "Max Accel", "Min Accel",
-                "Max Veh Speed", "Min Veh Speed", "Len of straight", "Curve direction", "Deg of curve", "Max str angle");
+        String segmentsHeading = String.format(" %8s | %19s | %19s | %11s | %13s | %13s | %10s | %10s | %10s | %10s |" +
+                        " %10s | %10s",
+                "Seg Type", "GPS Start Lat/Lon", "GPS End Lat/Lon", "Avg Veh Spd", "Max Accel", "Min Accel",
+                "Max Veh Spd", "Min Veh Spd", "Len of str", "Curve dir", "Deg of curve", "Max str angle");
         JLabel segHeadLabel = new JLabel(segmentsHeading);
         segHeadLabel.setFont(new Font("Monospaced", Font.PLAIN, 12));
         return segHeadLabel;

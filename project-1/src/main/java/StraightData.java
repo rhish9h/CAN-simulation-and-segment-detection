@@ -13,8 +13,7 @@ public class StraightData extends SegmentData {
 
     @Override
     public String toString() {
-
-        return String.format(" %12s | %s | %6.2f km/h | %6.2f km/h | %6.2f km",
+        return String.format(" %8s | %s | %6.2f km/h | %6.2f km/h | %6.2f km",
                 "Straight", super.toString(), maxVehSpeed, minVehSpeed, straightLength);
     }
 }
