@@ -55,7 +55,7 @@ public class SimulationGUI extends JFrame implements Observer {
 
     private JLabel getSegmentsHeading() {
         String segmentsHeading = String.format(" %8s | %19s | %19s | %11s | %13s | %13s | %10s | %10s | %10s | %10s |" +
-                        " %10s | %10s",
+                        " %11s | %11s",
                 "Seg Type", "GPS Start Lat/Lon", "GPS End Lat/Lon", "Avg Veh Spd", "Max Accel", "Min Accel",
                 "Max Veh Spd", "Min Veh Spd", "Len of str", "Curve dir", "Deg of curve", "Max str angle");
         JLabel segHeadLabel = new JLabel(segmentsHeading);

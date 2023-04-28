@@ -13,10 +13,7 @@ public class CurveData extends SegmentData {
 
     @Override
     public String toString() {
-        return "CurveData{" +
-                "curveDirection=" + curveDirection +
-                ", curveAngle=" + curveAngle +
-                ", maxStrAngle=" + maxStrAngle +
-                '}' + super.toString();
+        return String.format(" %8s | %s | %6s      | %6s      | %10s | %10s | %8.2f deg | %5.2f deg",
+                "Curve", super.toString(), "", "", "", curveDirection.name(), curveAngle, maxStrAngle);
     }
 }
