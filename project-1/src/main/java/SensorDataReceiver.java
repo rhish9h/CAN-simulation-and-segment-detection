@@ -13,7 +13,7 @@ public class SensorDataReceiver extends Observable {
     private String gpsLat = "-";
     private String gpsLon = "-";
 
-    private DetectSegments detection = new DetectSegments();
+    private SegmentDetector detector = new SegmentDetector();
     
     /**
      * Public API to receive sensor values and print them in the right format
@@ -36,12 +36,11 @@ public class SensorDataReceiver extends Observable {
         }
 
         if(yawRate != "-" && latAccel != "-"){
-           detection.newValue(Double.parseDouble(yawRate), Double.parseDouble(latAccel)); //this returns a boolean when a new segment occurs
+           detector.parseValue(Double.parseDouble(yawRate), Double.parseDouble(latAccel)); //this returns a boolean when a new segment occurs
         }
 
         setChanged();
-        notifyObservers(String.format("%20s ms | %10s km/h | %10s deg | %10s deg/sec | %10s m/sec^s | %10s m/sec^s | %15s %15s \r",
-                curTime, vehSpeed, strAngle, yawRate, latAccel, lonAccel, gpsLat, gpsLon));
+        notifyObservers(getFormattedSensorData());
         printData();
     }
 
@@ -54,7 +53,11 @@ public class SensorDataReceiver extends Observable {
      * Print function to display all sensor values in the correct format
      */
     private void printData() {
-        System.out.print(String.format("%20s ms | %10s km/h | %10s deg | %10s deg/sec | %10s m/sec^s | %10s m/sec^s | %15s %15s \r",
-                curTime, vehSpeed, strAngle, yawRate, latAccel, lonAccel, gpsLat, gpsLon));
+        System.out.print(getFormattedSensorData());
+    }
+
+    private String getFormattedSensorData() {
+        return String.format("%20s ms | %10s km/h | %10s deg | %10s deg/sec | %10s m/sec^s | %10s m/sec^s | %15s %15s \r",
+                curTime, vehSpeed, strAngle, yawRate, latAccel, lonAccel, gpsLat, gpsLon);
     }
 }

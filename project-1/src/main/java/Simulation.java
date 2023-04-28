@@ -116,6 +116,7 @@ public class Simulation {
         double coordTime;
 
         while (frame != null && coord != null) {
+            //TODO pause messing with the timer - fix it
             if (paused) {
                 Thread.sleep(simulationPauseDelay);
                 continue;

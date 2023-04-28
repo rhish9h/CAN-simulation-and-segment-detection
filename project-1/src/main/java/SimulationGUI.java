@@ -6,7 +6,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class SimulationGUI extends JFrame implements Observer {
-    JLabel simulationData;
+    private JLabel simulationData;
 
     public SimulationGUI() {
         super("Simulation");

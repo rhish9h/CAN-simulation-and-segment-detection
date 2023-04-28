@@ -2,14 +2,14 @@
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class DetectSegments {
+public class SegmentDetector {
     Queue<Double> yawValues;
     double currentTotalYAW;
     Queue<Double> accelValues;
     double currentTotalACCEL;
     boolean currentlyStraight;
 
-    public DetectSegments(){
+    public SegmentDetector(){
         yawValues = new LinkedList<>();
         accelValues = new LinkedList<>();
         currentTotalYAW = 0.0;
@@ -17,7 +17,7 @@ public class DetectSegments {
         currentlyStraight = true;
     }
 
-    public boolean newValue(double valueYAW, double valueACCEL){
+    public boolean parseValue(double valueYAW, double valueACCEL){
         if(yawValues.size() == 10 && accelValues.size() == 10){
 
             currentTotalYAW = currentTotalYAW - yawValues.peek();
