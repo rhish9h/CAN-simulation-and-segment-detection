@@ -61,7 +61,7 @@ public class SensorDataReceiver extends Observable {
     }
 
     private String getFormattedSensorData() {
-        return String.format("%22.2f ms | %10.2f km/h | %10.2f deg | %10.2f deg/sec | %10.2f m/sec^s | %10.2f m/sec^s | " +
+        return String.format("%28.2f ms | %10.2f km/h | %10.2f deg | %10.2f deg/sec | %10.2f m/sec^s | %10.2f m/sec^s | " +
                         "%15.6f %15.6f \r",
                 curTime, vehSpeed, strAngle, yawRate, latAccel, lonAccel, gpsLat, gpsLon);
     }
