@@ -72,7 +72,7 @@ public class Simulation {
             SimulationGUI simulationGUI = new SimulationGUI();
             sensorDataReceiver.addObserver(simulationGUI);
 
-            System.out.format("   %20s |   %10s |    %10s |         %10s |         %10s |         %10s |  %30s \n",
+            System.out.format("   %22s |   %10s |    %10s |         %10s |         %10s |         %10s |  %30s \n",
                     "Current Time", "Vehicle Speed", "Steer Angle", "Yaw Rate", "Lat Accel", "Long Accel", "GPS Lat/Long");
 
             frame = canTrace.getNextMessage();

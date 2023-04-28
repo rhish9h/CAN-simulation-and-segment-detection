@@ -71,8 +71,6 @@ public class SegmentAggregator {
 
     public StraightData buildStraightData(GPSCoordinate gpsEnd) {
         this.gpsEnd = gpsEnd;
-        System.out.println(segmentStartTime);
-        System.out.println(gpsEnd.getOffset());
         straightLength = avgVehSpeed * (gpsEnd.getOffset() - segmentStartTime) / 1000_000 / 60 / 60;
         return new StraightData(gpsStart, gpsEnd, avgVehSpeed, maxLonAccel, minLonAccel,
                 maxVehSpeed, minVehSpeed, straightLength);

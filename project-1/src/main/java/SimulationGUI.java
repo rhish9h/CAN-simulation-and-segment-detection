@@ -12,7 +12,7 @@ public class SimulationGUI extends JFrame implements Observer {
     public SimulationGUI() {
         super("Simulation");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1280, 720);
+        setSize(1200, 700);
 
         simulationData = new JLabel(String.format("%100s", "[Click Play to start Simulation]"));
         simulationData.setFont(new Font("Monospaced", Font.PLAIN, 12));
@@ -33,21 +33,21 @@ public class SimulationGUI extends JFrame implements Observer {
         setVisible(true);
     }
 
+    private JLabel getSimulationDataHeading() {
+        String heading = String.format("   %22s |   %10s |    %10s |         %10s |         %10s |         %10s |  %30s \n",
+                "Current Time", "Vehicle Speed", "Steer Angle", "Yaw Rate", "Lat Accel", "Long Accel", "GPS Lat/Long");
+        JLabel simulationDataHeading = new JLabel(heading);
+        simulationDataHeading.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        return simulationDataHeading;
+    }
+
     private JLabel getDashes() {
-        String dashes = String.format("   %20s |  %10s |  %10s |  %10s |  %10s |  %10s |  %30s \n",
+        String dashes = String.format("   %22s |  %10s |  %10s |  %10s |  %10s |  %10s |  %30s \n",
                 "-------------", "--------------", "-------------", "-----------------", "-----------------",
                 "-----------------", "------------------------------");
         JLabel dashLabel = new JLabel(dashes);
         dashLabel.setFont(new Font("Monospaced", Font.PLAIN, 12));
         return dashLabel;
-    }
-
-    private JLabel getSimulationDataHeading() {
-        String heading = String.format("   %20s |   %10s |    %10s |         %10s |         %10s |         %10s |  %30s \n",
-                "Current Time", "Vehicle Speed", "Steer Angle", "Yaw Rate", "Lat Accel", "Long Accel", "GPS Lat/Long");
-        JLabel simulationDataHeading = new JLabel(heading);
-        simulationDataHeading.setFont(new Font("Monospaced", Font.PLAIN, 12));
-        return simulationDataHeading;
     }
 
     private void addPlayButton() {
