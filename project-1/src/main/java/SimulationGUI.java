@@ -56,7 +56,11 @@ public class SimulationGUI extends JFrame implements Observer {
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Simulation.paused = !Simulation.paused;
+                if (!Simulation.getPaused()) {
+                    Simulation.pauseSimulation();
+                } else {
+                    Simulation.unpauseSimulation();
+                }
             }
         });
 

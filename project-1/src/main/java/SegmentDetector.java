@@ -41,7 +41,7 @@ public class SegmentDetector {
             if(currentlyStraight){
                 if(avgYaw > 5.0 || avgYaw < -5.0){
                     currentlyStraight = false;
-                    Simulation.paused = true;
+//                    Simulation.paused = true;
 
                     if(avgYaw > 5.0){
                         segment = "Now on a left turn segment";
@@ -63,7 +63,7 @@ public class SegmentDetector {
                 if(-5.0 < avgYaw && avgYaw < 5.0){
                     if(-0.5 < avgAccel && avgAccel < 0.5){
                         currentlyStraight = true;
-                        Simulation.paused = true;
+//                        Simulation.paused = true;
 
                         segment = "Now on a straight segment";
                         System.out.println("Now on a straight segment");

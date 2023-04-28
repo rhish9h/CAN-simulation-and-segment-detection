@@ -12,7 +12,7 @@ public class Simulation {
     private CANTrace canTrace;
     private GPSTrace gpsTrace;
     private Scanner sc;
-    private double startTime;
+    private static double startTime;
     private SensorDataReceiver sensorDataReceiver;
     private final int milliDelay = 0;
     private final int nanoDelay = 100;
@@ -20,9 +20,28 @@ public class Simulation {
     private CANFrame frame;
     private GPSCoordinate coord;
     private SegmentDetector segmentDetector;
+    private static double pausedAt;
     // If paused is true, the simulation will stall, else it will continue
     // It is public so the GUI button action can modify it
-    public static boolean paused = true;
+    private static boolean paused = true;
+
+    public static boolean getPaused() {
+        return paused;
+    }
+
+    public static void pauseSimulation() {
+        if (!paused) {
+            pausedAt = System.nanoTime();
+        }
+        paused = true;
+    }
+
+    public static void unpauseSimulation() {
+        if (paused) {
+            startTime += System.nanoTime() - pausedAt;
+        }
+        paused = false;
+    }
 
     /**
      * Initiate values required for the simulation
@@ -47,7 +66,7 @@ public class Simulation {
             parseCANData();
             parseGPSData();
 
-            System.out.println("Press enter to start simulation");
+            System.out.println("Press enter to open simulation window");
             sc.nextLine();
 
             SimulationGUI simulationGUI = new SimulationGUI();
@@ -59,6 +78,7 @@ public class Simulation {
             frame = canTrace.getNextMessage();
             coord = gpsTrace.getNextMessage();
             startTime = System.nanoTime();
+            pausedAt = startTime;
 
             bothFrameAndCoordPresent();
             onlyFramePresent();
@@ -118,7 +138,6 @@ public class Simulation {
         double coordTime;
 
         while (frame != null && coord != null) {
-            //TODO pause messing with the timer - fix it
             if (paused) {
                 Thread.sleep(simulationPauseDelay);
                 continue;
