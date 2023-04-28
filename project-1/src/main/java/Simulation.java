@@ -19,6 +19,7 @@ public class Simulation {
     private final int simulationPauseDelay = 100;
     private CANFrame frame;
     private GPSCoordinate coord;
+    private SegmentDetector segmentDetector;
     // If paused is true, the simulation will stall, else it will continue
     // It is public so the GUI button action can modify it
     public static boolean paused = true;
@@ -28,7 +29,8 @@ public class Simulation {
      */
     public Simulation() {
         sc = new Scanner(System.in);
-        sensorDataReceiver = new SensorDataReceiver();
+        segmentDetector = new SegmentDetector();
+        sensorDataReceiver = new SensorDataReceiver(segmentDetector);
     }
 
     /**
@@ -61,7 +63,7 @@ public class Simulation {
             bothFrameAndCoordPresent();
             onlyFramePresent();
             onlyCoordPresent();
-
+            System.out.println(segmentDetector.getSegmentDataList());
         } catch (IOException e) {
             System.err.println(e.getMessage());
         } catch (InterruptedException e) {

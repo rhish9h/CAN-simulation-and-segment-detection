@@ -1,5 +1,5 @@
-
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 public class SegmentDetector {
@@ -10,6 +10,7 @@ public class SegmentDetector {
     private boolean currentlyStraight;
     private final int windowSize = 10;
     private String segment;
+    private List<SegmentData> segmentDataList;
 
     public SegmentDetector(){
         yawValues = new LinkedList<>();
@@ -88,5 +89,9 @@ public class SegmentDetector {
         }
 
         return segment;
+    }
+
+    public List<SegmentData> getSegmentDataList() {
+        return segmentDataList;
     }
 }

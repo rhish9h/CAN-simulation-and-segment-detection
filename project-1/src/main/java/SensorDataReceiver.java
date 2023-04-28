@@ -14,7 +14,11 @@ public class SensorDataReceiver extends Observable {
     private double gpsLon = 0.0;
     private String segment;
 
-    private SegmentDetector detector = new SegmentDetector();
+    private SegmentDetector detector;
+
+    public SensorDataReceiver(SegmentDetector detector) {
+        this.detector = detector;
+    }
     
     /**
      * Public API to receive sensor values and print them in the right format
