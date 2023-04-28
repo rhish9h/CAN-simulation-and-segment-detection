@@ -7,6 +7,7 @@ import java.util.Observer;
 
 public class SimulationGUI extends JFrame implements Observer {
     private JLabel simulationData;
+    private JPanel panel;
 
     public SimulationGUI() {
         super("Simulation");
@@ -17,10 +18,11 @@ public class SimulationGUI extends JFrame implements Observer {
         simulationData.setFont(new Font("Monospaced", Font.PLAIN, 12));
 
         // Create a panel to hold the table.
-        JPanel panel = new JPanel(new GridLayout(3, 1));
+        panel = new JPanel(new GridLayout(0, 1));
         panel.add(getSimulationDataHeading());
         panel.add(getDashes());
         panel.add(simulationData);
+        panel.add(new JLabel("\n"));
 
         // Add the panel to the frame.
         add(panel, BorderLayout.NORTH);
@@ -64,6 +66,18 @@ public class SimulationGUI extends JFrame implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        simulationData.setText((String) arg);
+        SimulationDTO simulationDTO = (SimulationDTO) arg;
+        simulationData.setText(simulationDTO.getSensorData());
+
+        if (simulationDTO.getSegmentData() != null) {
+            addSegment(simulationDTO.getSegmentData());
+        }
+    }
+
+    private void addSegment(String segment) {
+        JLabel segmentLabel = new JLabel(segment + "\n");
+        segmentLabel.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        panel.add(segmentLabel);
+        panel.revalidate();
     }
 }

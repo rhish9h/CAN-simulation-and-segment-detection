@@ -12,6 +12,7 @@ public class SensorDataReceiver extends Observable {
     private double lonAccel = 0.0;
     private double gpsLat = 0.0;
     private double gpsLon = 0.0;
+    private String segment;
 
     private SegmentDetector detector = new SegmentDetector();
     
@@ -36,11 +37,11 @@ public class SensorDataReceiver extends Observable {
         }
 
         if(yawRate != 0.0 && latAccel != 0.0){
-           detector.parseValue(yawRate, latAccel); //this returns a boolean when a new segment occurs
+            segment = detector.parseValue(yawRate, latAccel);
         }
 
         setChanged();
-        notifyObservers(getFormattedSensorData());
+        notifyObservers(new SimulationDTO(getFormattedSensorData(), segment));
         printData();
     }
 

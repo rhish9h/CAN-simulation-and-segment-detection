@@ -9,6 +9,7 @@ public class SegmentDetector {
     private double totalAccel;
     private boolean currentlyStraight;
     private final int windowSize = 10;
+    private String segment;
 
     public SegmentDetector(){
         yawValues = new LinkedList<>();
@@ -18,7 +19,9 @@ public class SegmentDetector {
         currentlyStraight = true;
     }
 
-    public boolean parseValue(double yawRate, double latAccel){
+    public String parseValue(double yawRate, double latAccel){
+        segment = null;
+
         if(yawValues.size() == windowSize && accelValues.size() == windowSize){
 
             totalYaw -= yawValues.peek();
@@ -40,8 +43,10 @@ public class SegmentDetector {
                     Simulation.paused = true;
 
                     if(avgYaw > 5.0){
+                        segment = "Now on a left turn segment";
                         System.out.println("Now on a left turn segment");    
                     } else if(avgYaw < -5.0){
+                        segment = "Now on a right turn segment";
                         System.out.println("Now on a right turn segment"); 
                     }
 
@@ -49,48 +54,39 @@ public class SegmentDetector {
                     yawValues.clear();
                     totalAccel = 0.0;
                     accelValues.clear();
-
-                    return true;
                 }
                 else{
-                    return false;
+                    return null;
                 }
             }else{
                 if(-5.0 < avgYaw && avgYaw < 5.0){
                     if(-0.5 < avgAccel && avgAccel < 0.5){
                         currentlyStraight = true;
-                       /*
-                        Code for testing segments, should be removed before submission
-                        */
-
                         Simulation.paused = true;
-                        System.out.println("Now on a straight segment");
 
+                        segment = "Now on a straight segment";
+                        System.out.println("Now on a straight segment");
 
                         totalYaw = 0.0;
                         yawValues.clear();
                         totalAccel = 0.0;
                         accelValues.clear();
-
-                        return true;
+                    } else{
+                        return null;
                     }
-                    else{
-                        return false;
-                    }
-                }
-                else{
-                    return false;
+                } else{
+                    return null;
                 }
             }
-        }
-        else{
-
+        } else{
             yawValues.add(yawRate);
             totalYaw = totalYaw + yawRate;
 
             accelValues.add(latAccel);
             totalAccel = totalAccel + latAccel;
-            return false;
+            return null;
         }
+
+        return segment;
     }
 }
