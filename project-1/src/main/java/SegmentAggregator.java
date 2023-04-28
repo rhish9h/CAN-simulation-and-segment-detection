@@ -22,15 +22,15 @@ public class SegmentAggregator {
         this.gpsStart = null;
         this.gpsEnd = null;
         this.avgVehSpeed = 0;
-        this.maxLatAccel = 0;
-        this.minLatAccel = 0;
+        this.maxLatAccel = -99;
+        this.minLatAccel = 99;
         this.curveDirection = null;
         this.curveAngle = 0;
-        this.maxStrAngle = 0;
-        this.maxLonAccel = 0;
-        this.minLonAccel = 0;
-        this.maxVehSpeed = 0;
-        this.minVehSpeed = 0;
+        this.maxStrAngle = -99;
+        this.maxLonAccel = -99;
+        this.minLonAccel = 99;
+        this.maxVehSpeed = -99;
+        this.minVehSpeed = 99;
         this.straightLength = 0;
     }
 
@@ -45,7 +45,7 @@ public class SegmentAggregator {
         if (sensorData.getLatAccel() > maxLatAccel) {
             maxLatAccel = sensorData.getLatAccel();
         }
-        if (sensorData.getLonAccel() < minLatAccel) {
+        if (sensorData.getLatAccel() < minLatAccel) {
             minLatAccel = sensorData.getLatAccel();
         }
         if (curveDirection != null) {
@@ -59,7 +59,7 @@ public class SegmentAggregator {
             maxLonAccel = sensorData.getLonAccel();
         }
         if (sensorData.getLonAccel() < minLonAccel) {
-            maxLonAccel = sensorData.getLonAccel();
+            minLonAccel = sensorData.getLonAccel();
         }
         if (sensorData.getVehSpeed() > maxVehSpeed) {
             maxVehSpeed = sensorData.getVehSpeed();
@@ -71,7 +71,7 @@ public class SegmentAggregator {
 
     public StraightData buildStraightData(GPSCoordinate gpsEnd) {
         this.gpsEnd = gpsEnd;
-        straightLength = avgVehSpeed * (gpsEnd.getOffset() - segmentStartTime) / 1000_000 / 60 / 60;
+        straightLength = avgVehSpeed * (gpsEnd.getOffset() - segmentStartTime) / 1000 / 60 / 60;
         return new StraightData(gpsStart, gpsEnd, avgVehSpeed, maxLonAccel, minLonAccel,
                 maxVehSpeed, minVehSpeed, straightLength);
     }
