@@ -22,4 +22,13 @@ public class StraightData extends SegmentData {
     public double getStraightLength() {
         return straightLength;
     }
+
+    @Override
+    public String toString() {
+        return "StraightData{" +
+                "maxVehSpeed=" + maxVehSpeed +
+                ", minVehSpeed=" + minVehSpeed +
+                ", straightLength=" + straightLength +
+                '}';
+    }
 }

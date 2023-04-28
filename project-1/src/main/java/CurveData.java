@@ -22,4 +22,13 @@ public class CurveData extends SegmentData {
     public double getMaxStrAngle() {
         return maxStrAngle;
     }
+
+    @Override
+    public String toString() {
+        return "CurveData{" +
+                "curveDirection=" + curveDirection +
+                ", curveAngle=" + curveAngle +
+                ", maxStrAngle=" + maxStrAngle +
+                '}';
+    }
 }

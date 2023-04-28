@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -9,7 +10,7 @@ public class SegmentDetector {
     private double totalAccel;
     private boolean currentlyStraight;
     private final int windowSize = 10;
-    private String segment;
+    private SegmentData segment;
     private List<SegmentData> segmentDataList;
 
     public SegmentDetector(){
@@ -18,10 +19,14 @@ public class SegmentDetector {
         totalYaw = 0.0;
         totalAccel = 0.0;
         currentlyStraight = true;
+        segmentDataList = new ArrayList<>();
     }
 
     public String parse(SensorData sensorData){
-        segment = null;
+        if (segment == null) {
+            segment = new StraightData(new GPSCoordinate(sensorData.getCurTime(), sensorData.getGpsLat(), sensorData.getGpsLon()),
+                    null, 0, 0, 0, 0, 0, 0);
+        }
 
         if(yawValues.size() == windowSize && accelValues.size() == windowSize){
 
@@ -44,11 +49,12 @@ public class SegmentDetector {
 //                    Simulation.paused = true;
 
                     if(avgYaw > 5.0){
-                        segment = "Now on a left turn segment";
-                        System.out.println("Now on a left turn segment");    
+                        //TODO set data in previous segment
+                        segmentDataList.add(segment);
+                        segment = new CurveData(null, null, 0, 0, 0, CurveDirection.LEFT, 0, 0);
                     } else if(avgYaw < -5.0){
-                        segment = "Now on a right turn segment";
-                        System.out.println("Now on a right turn segment"); 
+                        segmentDataList.add(segment);
+                        segment = new CurveData(null, null, 0, 0, 0, CurveDirection.RIGHT, 0, 0);
                     }
 
                     totalYaw = 0.0;
@@ -65,8 +71,8 @@ public class SegmentDetector {
                         currentlyStraight = true;
 //                        Simulation.paused = true;
 
-                        segment = "Now on a straight segment";
-                        System.out.println("Now on a straight segment");
+                        segmentDataList.add(segment);
+                        segment = new StraightData(null, null, 0, 0, 0, 0, 0, 0);
 
                         totalYaw = 0.0;
                         yawValues.clear();
@@ -88,7 +94,7 @@ public class SegmentDetector {
             return null;
         }
 
-        return segment;
+        return segment.toString();
     }
 
     public List<SegmentData> getSegmentDataList() {

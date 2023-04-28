@@ -6,10 +6,10 @@ public class GPSCoordinate {
     private double latitude;
     private double longitude;
 
-    public GPSCoordinate(int o, double x, double y){
-        offset = o;
-        latitude = x;
-        longitude = y;
+    public GPSCoordinate(double offset, double latitude, double longitude){
+        this.offset = offset;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     void print(){
