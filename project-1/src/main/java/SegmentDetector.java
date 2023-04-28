@@ -12,6 +12,7 @@ public class SegmentDetector {
     private final int windowSize = 10;
     private SegmentData segment;
     private List<SegmentData> segmentDataList;
+    private SegmentAggregator aggregator;
 
     public SegmentDetector(){
         yawValues = new LinkedList<>();
@@ -20,13 +21,11 @@ public class SegmentDetector {
         totalAccel = 0.0;
         currentlyStraight = true;
         segmentDataList = new ArrayList<>();
+        aggregator = new SegmentAggregator();
     }
 
     public String parse(SensorData sensorData){
-        if (segment == null) {
-            segment = new StraightData(new GPSCoordinate(sensorData.getCurTime(), sensorData.getGpsLat(), sensorData.getGpsLon()),
-                    null, 0, 0, 0, 0, 0, 0);
-        }
+        aggregator.aggregate(sensorData, null);
 
         if(yawValues.size() == windowSize && accelValues.size() == windowSize){
 
@@ -45,18 +44,18 @@ public class SegmentDetector {
 
             if(currentlyStraight){
                 if(avgYaw > 5.0 || avgYaw < -5.0){
-                    currentlyStraight = false;
-//                    Simulation.paused = true;
+                    segment = aggregator.buildStraightData(new GPSCoordinate(sensorData.getCurTime(),
+                            sensorData.getGpsLat(), sensorData.getGpsLon()));
+                    segmentDataList.add(segment);
+                    aggregator.clear();
 
                     if(avgYaw > 5.0){
-                        //TODO set data in previous segment
-                        segmentDataList.add(segment);
-                        segment = new CurveData(null, null, 0, 0, 0, CurveDirection.LEFT, 0, 0);
+                        aggregator.aggregate(sensorData, CurveDirection.LEFT);
                     } else if(avgYaw < -5.0){
-                        segmentDataList.add(segment);
-                        segment = new CurveData(null, null, 0, 0, 0, CurveDirection.RIGHT, 0, 0);
+                        aggregator.aggregate(sensorData, CurveDirection.RIGHT);
                     }
 
+                    currentlyStraight = false;
                     totalYaw = 0.0;
                     yawValues.clear();
                     totalAccel = 0.0;
@@ -69,10 +68,12 @@ public class SegmentDetector {
                 if(-5.0 < avgYaw && avgYaw < 5.0){
                     if(-0.5 < avgAccel && avgAccel < 0.5){
                         currentlyStraight = true;
-//                        Simulation.paused = true;
 
+                        segment = aggregator.buildCurveData(new GPSCoordinate(sensorData.getCurTime(),
+                                sensorData.getGpsLat(), sensorData.getGpsLon()));
                         segmentDataList.add(segment);
-                        segment = new StraightData(null, null, 0, 0, 0, 0, 0, 0);
+                        aggregator.clear();
+                        aggregator.aggregate(sensorData, null);
 
                         totalYaw = 0.0;
                         yawValues.clear();

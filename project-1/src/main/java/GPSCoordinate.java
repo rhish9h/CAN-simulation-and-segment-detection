@@ -28,4 +28,13 @@ public class GPSCoordinate {
     public double getLongitude() {
         return longitude;
     }
+
+    @Override
+    public String toString() {
+        return "GPSCoordinate{" +
+                "offset=" + offset +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                '}';
+    }
 }

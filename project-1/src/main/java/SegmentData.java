@@ -13,23 +13,14 @@ public abstract class SegmentData {
         this.minAccel = minAccel;
     }
 
-    public GPSCoordinate getGpsStart() {
-        return gpsStart;
-    }
-
-    public GPSCoordinate getGpsEnd() {
-        return gpsEnd;
-    }
-
-    public double getAvgVehSpeed() {
-        return avgVehSpeed;
-    }
-
-    public double getMaxAccel() {
-        return maxAccel;
-    }
-
-    public double getMinAccel() {
-        return minAccel;
+    @Override
+    public String toString() {
+        return "SegmentData{" +
+                "gpsStart=" + gpsStart +
+                ", gpsEnd=" + gpsEnd +
+                ", avgVehSpeed=" + avgVehSpeed +
+                ", maxAccel=" + maxAccel +
+                ", minAccel=" + minAccel +
+                '}';
     }
 }

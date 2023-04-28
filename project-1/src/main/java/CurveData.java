@@ -11,24 +11,12 @@ public class CurveData extends SegmentData {
         this.maxStrAngle = maxStrAngle;
     }
 
-    public CurveDirection getCurveDirection() {
-        return curveDirection;
-    }
-
-    public double getCurveAngle() {
-        return curveAngle;
-    }
-
-    public double getMaxStrAngle() {
-        return maxStrAngle;
-    }
-
     @Override
     public String toString() {
         return "CurveData{" +
                 "curveDirection=" + curveDirection +
                 ", curveAngle=" + curveAngle +
                 ", maxStrAngle=" + maxStrAngle +
-                '}';
+                '}' + super.toString();
     }
 }
