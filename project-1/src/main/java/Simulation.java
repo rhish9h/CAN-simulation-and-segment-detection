@@ -22,7 +22,6 @@ public class Simulation {
     private SegmentDetector segmentDetector;
     private static double pausedAt;
     // If paused is true, the simulation will stall, else it will continue
-    // It is public so the GUI button action can modify it
     private static boolean paused = true;
 
     public static boolean getPaused() {
@@ -72,7 +71,7 @@ public class Simulation {
             SimulationGUI simulationGUI = new SimulationGUI();
             sensorDataReceiver.addObserver(simulationGUI);
 
-            System.out.format("   %22s |   %10s |    %10s |         %10s |         %10s |         %10s |  %30s \n",
+            System.out.format("   %28s |   %10s |    %10s |         %10s |         %10s |         %10s |  %30s \n",
                     "Current Time", "Vehicle Speed", "Steer Angle", "Yaw Rate", "Lat Accel", "Long Accel", "GPS Lat/Long");
 
             frame = canTrace.getNextMessage();
@@ -83,7 +82,7 @@ public class Simulation {
             bothFrameAndCoordPresent();
             onlyFramePresent();
             onlyCoordPresent();
-            System.out.println(segmentDetector.getSegmentDataList());
+            printSegmentDataToConsole();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         } catch (InterruptedException e) {
@@ -261,6 +260,17 @@ public class Simulation {
 
             // This delay is added on purpose to avoid jittery ui output
             Thread.sleep(milliDelay, nanoDelay);
+        }
+    }
+
+    private void printSegmentDataToConsole() {
+        System.out.println();
+        System.out.format(" %8s | %19s | %19s | %11s | %13s | %13s | %10s | %10s | %10s | %10s |" +
+                        " %11s | %11s\n",
+                "Seg Type", "GPS Start Lat/Lon", "GPS End Lat/Lon", "Avg Veh Spd", "Max Accel", "Min Accel",
+                "Max Veh Spd", "Min Veh Spd", "Len of str", "Curve dir", "Deg of curve", "Max str angle");
+        for(SegmentData segment : segmentDetector.getSegmentDataList()) {
+            System.out.println(segment);
         }
     }
 
