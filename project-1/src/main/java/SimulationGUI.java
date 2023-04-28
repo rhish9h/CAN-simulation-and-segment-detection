@@ -23,6 +23,7 @@ public class SimulationGUI extends JFrame implements Observer {
         panel.add(getDashes());
         panel.add(simulationData);
         panel.add(new JLabel("\n"));
+        panel.add(getSegmentsHeading());
 
         // Add the panel to the frame.
         add(panel, BorderLayout.NORTH);
@@ -48,6 +49,15 @@ public class SimulationGUI extends JFrame implements Observer {
         JLabel dashLabel = new JLabel(dashes);
         dashLabel.setFont(new Font("Monospaced", Font.PLAIN, 12));
         return dashLabel;
+    }
+
+    private JLabel getSegmentsHeading() {
+        String segmentsHeading = String.format(" %12s | %19s | %19s | %10s | %10s | %10s | %10s | %10s | %10s | %10s",
+                "Segment Type", "GPS Start Lat/Lon", "GPS End Lat/Lon", "Avg Veh Speed", "Max Accel", "Min Accel",
+                "Max Veh Speed", "Min Veh Speed", "Len of straight", "Curve direction", "Deg of curve", "Max str angle");
+        JLabel segHeadLabel = new JLabel(segmentsHeading);
+        segHeadLabel.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        return segHeadLabel;
     }
 
     private void addPlayButton() {

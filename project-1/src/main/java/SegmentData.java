@@ -15,12 +15,8 @@ public abstract class SegmentData {
 
     @Override
     public String toString() {
-        return "SegmentData{" +
-                "gpsStart=" + gpsStart +
-                ", gpsEnd=" + gpsEnd +
-                ", avgVehSpeed=" + avgVehSpeed +
-                ", maxAccel=" + maxAccel +
-                ", minAccel=" + minAccel +
-                '}';
+        return String.format("%3.6f %3.6f | %3.6f %3.6f | %3.2f km/h | 4.2f m/sec^s |" +
+                "4.2f m/sec^2", gpsStart.getLatitude(), gpsStart.getLongitude(), gpsEnd.getLatitude(), gpsEnd.getLongitude(),
+                avgVehSpeed, maxAccel, minAccel);
     }
 }

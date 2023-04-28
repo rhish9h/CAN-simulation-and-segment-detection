@@ -39,8 +39,10 @@ public class SensorDataReceiver extends Observable {
             case Identifier.GPS_LON -> gpsLon = sensorValue;
         }
 
-        segment = detector.parse(new SensorData(curTime, vehSpeed, strAngle, yawRate,
+        if (yawRate != 0 && latAccel != 0 && gpsLat != 0 && gpsLon != 0) {
+            segment = detector.parse(new SensorData(curTime, vehSpeed, strAngle, yawRate,
                 latAccel, lonAccel, gpsLat, gpsLon));
+        }
         setChanged();
         notifyObservers(new SimulationDTO(getFormattedSensorData(), segment));
         printData();

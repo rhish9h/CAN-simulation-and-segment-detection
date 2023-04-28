@@ -39,7 +39,7 @@ public class SegmentAggregator {
             segmentStartTime = sensorData.getCurTime();
         }
         if (gpsStart == null) {
-            gpsStart = new GPSCoordinate(sensorData.getCurTime(), sensorData.getLatAccel(), sensorData.getLonAccel());
+            gpsStart = new GPSCoordinate(sensorData.getCurTime(), sensorData.getGpsLat(), sensorData.getGpsLon());
         }
         avgVehSpeed = (avgVehSpeed + sensorData.getVehSpeed()) / 2;
         if (sensorData.getLatAccel() > maxLatAccel) {
