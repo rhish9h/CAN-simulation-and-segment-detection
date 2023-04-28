@@ -30,15 +30,15 @@ public class SegmentAggregator {
         this.gpsStart = null;
         this.gpsEnd = null;
         this.avgVehSpeed = 0;
-        this.maxLatAccel = -99;
-        this.minLatAccel = 99;
+        this.maxLatAccel = -999;
+        this.minLatAccel = 999;
         this.curveDirection = null;
         this.curveAngle = 0;
-        this.maxStrAngle = -99;
-        this.maxLonAccel = -99;
-        this.minLonAccel = 99;
-        this.maxVehSpeed = -99;
-        this.minVehSpeed = 99;
+        this.maxStrAngle = 0;
+        this.maxLonAccel = -999;
+        this.minLonAccel = 999;
+        this.maxVehSpeed = -999;
+        this.minVehSpeed = 999;
         this.straightLength = 0;
     }
 
