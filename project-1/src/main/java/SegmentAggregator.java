@@ -1,3 +1,8 @@
+/**
+ * Aggregator class that collects all the data required for a segment,
+ * Calculates rolling averages, min and maxes
+ * It can build Curve or Straight segment object depending on need
+ */
 public class SegmentAggregator {
     private double segmentStartTime;
 
@@ -17,6 +22,9 @@ public class SegmentAggregator {
     private double minVehSpeed;
     private double straightLength;
 
+    /**
+     * Clear all the data from this class and set to default values
+     */
     public void clear() {
         this.segmentStartTime = 0;
         this.gpsStart = null;
@@ -34,6 +42,11 @@ public class SegmentAggregator {
         this.straightLength = 0;
     }
 
+    /**
+     * Update the current segment data based on the new sensor data received
+     * @param sensorData all the sensor data to be aggregated
+     * @param curveDirection direction where the curve bends
+     */
     public void aggregate(SensorData sensorData, CurveDirection curveDirection) {
         if (segmentStartTime == 0) {
             segmentStartTime = sensorData.getCurTime();
@@ -69,6 +82,11 @@ public class SegmentAggregator {
         }
     }
 
+    /**
+     * Builder for Straight data object
+     * @param gpsEnd GPS coordinate where segment ends
+     * @return StraightData object built by existing segment data
+     */
     public StraightData buildStraightData(GPSCoordinate gpsEnd) {
         this.gpsEnd = gpsEnd;
         straightLength = avgVehSpeed * (gpsEnd.getOffset() - segmentStartTime) / 1000 / 60 / 60;
@@ -76,6 +94,11 @@ public class SegmentAggregator {
                 maxVehSpeed, minVehSpeed, straightLength);
     }
 
+    /**
+     * Builder for Curve data object
+     * @param gpsEnd GPS coordinate where segment ends
+     * @return CurveData object built by existing segment data
+     */
     public CurveData buildCurveData(GPSCoordinate gpsEnd) {
         this.gpsEnd = gpsEnd;
         curveAngle /= ((gpsEnd.getOffset() - segmentStartTime) / 10);

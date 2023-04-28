@@ -7,6 +7,7 @@ import java.util.Scanner;
  * 1. parsing the CAN trace file
  * 2. parsing the GPS trace file
  * 3. simulating real time data sensing
+ * 4. Detect segments, classify them and print as they get detected
  */
 public class Simulation {
     private CANTrace canTrace;
@@ -28,6 +29,9 @@ public class Simulation {
         return paused;
     }
 
+    /**
+     * Pause simulation, maintains time when sim was paused
+     */
     public static void pauseSimulation() {
         if (!paused) {
             pausedAt = System.nanoTime();
@@ -35,6 +39,11 @@ public class Simulation {
         paused = true;
     }
 
+    /**
+     * Unpause simulation,
+     * gets the time when it was paused,
+     * uses the difference and adds to the start time as this time was last during the pause
+     */
     public static void unpauseSimulation() {
         if (paused) {
             startTime += System.nanoTime() - pausedAt;
@@ -57,6 +66,8 @@ public class Simulation {
      * Gets first CAN frame from CAN data and first GPS coordinate from GPS data
      * Loops through data depending on whether both frame and coordinate are present,
      * or if only frame is present or if only coordinate is present
+     * Sends data to receiver which later detects segments
+     * Prints the segment data collected to console
      */
     public void startSimulation() {
         System.out.println("Start of Simulation");
@@ -263,6 +274,9 @@ public class Simulation {
         }
     }
 
+    /**
+     * Print the data of all the segments that were detected to console
+     */
     private void printSegmentDataToConsole() {
         System.out.println();
         System.out.format(" %8s | %19s | %19s | %11s | %13s | %13s | %10s | %10s | %10s | %10s |" +

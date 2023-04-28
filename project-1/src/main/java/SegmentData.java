@@ -1,3 +1,8 @@
+/**
+ * Abstract class for the Segment Data family, branches out into different types
+ * like Curve Data and Straight Data
+ * Holds all the data that is common to all children in the Segment Data family
+ */
 public abstract class SegmentData {
     private GPSCoordinate gpsStart;
     private GPSCoordinate gpsEnd;

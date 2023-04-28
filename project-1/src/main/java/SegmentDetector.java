@@ -3,6 +3,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+/**
+ * Detector that identifies a segment, classifies as Curve or Straight
+ */
 public class SegmentDetector {
     private Queue<Double> yawValues;
     private double totalYaw;
@@ -24,6 +27,14 @@ public class SegmentDetector {
         aggregator = new SegmentAggregator();
     }
 
+    /**
+     * Parse one record of sensor data at a time,
+     * maintain a sliding window average of windowSize (10) to deal with anomalies,
+     * Based on threshold values for yaw rate and lateral acceleration,
+     * classify whether segment is curve or straight
+     * @param sensorData one record of sensor data
+     * @return String consisting of segment information that was detected
+     */
     public String parse(SensorData sensorData){
         aggregator.aggregate(sensorData, null);
 

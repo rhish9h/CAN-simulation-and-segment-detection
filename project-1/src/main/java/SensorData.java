@@ -1,3 +1,6 @@
+/**
+ * POJO used to hold all of the sensor data in one place
+ */
 public class SensorData {
     private double curTime;
     private double vehSpeed;

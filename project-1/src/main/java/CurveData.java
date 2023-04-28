@@ -1,3 +1,6 @@
+/**
+ * POJO to hold Curve segment data
+ */
 public class CurveData extends SegmentData {
     private CurveDirection curveDirection;
     private double curveAngle;

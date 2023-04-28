@@ -1,3 +1,6 @@
+/**
+ * POJO to hold Straight segment data
+ */
 public class StraightData extends SegmentData {
     private double maxVehSpeed;
     private double minVehSpeed;

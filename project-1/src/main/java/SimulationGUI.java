@@ -5,10 +5,21 @@ import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
 
+/**
+ * GUI for the simulation, shows the real time sensor data and the
+ * segments data list as they are detected
+ * This is also an Observer of the Sensor Data Receiver, whenever data updates, GUI updates
+ */
 public class SimulationGUI extends JFrame implements Observer {
     private JLabel simulationData;
     private JPanel panel;
 
+    /**
+     * Constructor to build the GUI,
+     * Consists of a panel with a grid of column 1,
+     * grid rows have simulation heading, dashes, sim data,
+     * segments heading, their dashes and segment data as they get added
+     */
     public SimulationGUI() {
         super("Simulation");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -36,6 +47,10 @@ public class SimulationGUI extends JFrame implements Observer {
         setVisible(true);
     }
 
+    /**
+     * Build and get the simulation data heading in the correct format
+     * @return JLabel with simulation data heading
+     */
     private JLabel getSimulationDataHeading() {
         String heading = String.format("   %28s |   %10s |    %10s |         %10s |         %10s |         %10s |  %30s \n",
                 "Current Time", "Vehicle Speed", "Steer Angle", "Yaw Rate", "Lat Accel", "Long Accel", "GPS Lat/Long");
@@ -44,6 +59,10 @@ public class SimulationGUI extends JFrame implements Observer {
         return simulationDataHeading;
     }
 
+    /**
+     * Build and get the dashes that match the sensor headings
+     * @return JLabel with dashes
+     */
     private JLabel getDashes() {
         String dashes = String.format("   %28s |  %10s |  %10s |  %10s |  %10s |  %10s |  %30s \n",
                 "-------------", "--------------", "-------------", "-----------------", "-----------------",
@@ -53,6 +72,10 @@ public class SimulationGUI extends JFrame implements Observer {
         return dashLabel;
     }
 
+    /**
+     * Build and get the segments heading in the right format
+     * @return JLabel with segments heading
+     */
     private JLabel getSegmentsHeading() {
         String segmentsHeading = String.format(" %8s | %19s | %19s | %11s | %13s | %13s | %10s | %10s | %10s | %10s |" +
                         " %11s | %11s",
@@ -63,6 +86,9 @@ public class SimulationGUI extends JFrame implements Observer {
         return segHeadLabel;
     }
 
+    /**
+     * Builds and places a play / pause button at the bottom of the GUI window
+     */
     private void addPlayButton() {
         // Create a button to close the frame.
         JButton button = new JButton("Play/Pause");
@@ -81,6 +107,13 @@ public class SimulationGUI extends JFrame implements Observer {
         add(button, BorderLayout.SOUTH);
     }
 
+    /**
+     * Whenever the Observable updates its data, this method will be triggered
+     * updates the real time sensor data and adds a segment if sent
+     * @param o     the observable object.
+     * @param arg   an argument passed to the {@code notifyObservers}
+     *                 method.
+     */
     @Override
     public void update(Observable o, Object arg) {
         SimulationDTO simulationDTO = (SimulationDTO) arg;
@@ -91,6 +124,10 @@ public class SimulationGUI extends JFrame implements Observer {
         }
     }
 
+    /**
+     * Build and add a segment label to the display grid in the right format
+     * @param segment formatted string of the segment data
+     */
     private void addSegment(String segment) {
         JLabel segmentLabel = new JLabel(segment + "\n");
         segmentLabel.setFont(new Font("Monospaced", Font.PLAIN, 12));

@@ -2,6 +2,8 @@ import java.util.Observable;
 
 /**
  * Receiver of sensor data, prints data in the right format once received
+ * It is also an Observable class, every change will be monitored by Observers,
+ * especially used by GUI to deal with any changes in data and reflect on front end
  */
 public class SensorDataReceiver extends Observable {
     private double curTime = 0.0;
@@ -21,6 +23,7 @@ public class SensorDataReceiver extends Observable {
     
     /**
      * Public API to receive sensor values and print them in the right format
+     * Notifies all observers after receiving data to take action based on this data
      * @param sensorValue magnitude/value of the sensor reading
      * @param offset time offset at which it was captured
      * @param identifier description to identify which sensor's data it is
@@ -60,6 +63,10 @@ public class SensorDataReceiver extends Observable {
         System.out.print(getFormattedSensorData());
     }
 
+    /**
+     * Fetch the sensor data in specified format
+     * @return Formatter String
+     */
     private String getFormattedSensorData() {
         return String.format("%28.2f ms | %10.2f km/h | %10.2f deg | %10.2f deg/sec | %10.2f m/sec^s | %10.2f m/sec^s | " +
                         "%15.6f %15.6f \r",

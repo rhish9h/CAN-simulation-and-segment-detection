@@ -1,3 +1,7 @@
+/**
+ * Data transfer object used to send data from receiver to gui,
+ * as part of transfer from Observable to Observer during the update
+ */
 public class SimulationDTO {
     private String sensorData;
     private String segmentData;
