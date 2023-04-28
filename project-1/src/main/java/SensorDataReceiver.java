@@ -4,14 +4,14 @@ import java.util.Observable;
  * Receiver of sensor data, prints data in the right format once received
  */
 public class SensorDataReceiver extends Observable {
-    private String curTime = "-";
-    private String vehSpeed = "-";
-    private String strAngle = "-";
-    private String yawRate = "-";
-    private String latAccel = "-";
-    private String lonAccel = "-";
-    private String gpsLat = "-";
-    private String gpsLon = "-";
+    private double curTime = 0.0;
+    private double vehSpeed = 0.0;
+    private double strAngle = 0.0;
+    private double yawRate = 0.0;
+    private double latAccel = 0.0;
+    private double lonAccel = 0.0;
+    private double gpsLat = 0.0;
+    private double gpsLon = 0.0;
 
     private SegmentDetector detector = new SegmentDetector();
     
@@ -22,21 +22,21 @@ public class SensorDataReceiver extends Observable {
      * @param identifier description to identify which sensor's data it is
      */
     public void receiveSensorValues(double sensorValue, double offset, String identifier) {
-        curTime = String.format("%14.6f", offset);
+        curTime = offset;
 
         switch (identifier) {
             case Identifier.CUR_TIME -> doNothing();
-            case Identifier.VEH_SPEED -> vehSpeed = String.format("%8.2f", sensorValue);
-            case Identifier.STR_ANGLE -> strAngle = String.format("%8.2f", sensorValue);
-            case Identifier.YAW_RATE -> yawRate = String.format("%8.2f", sensorValue);
-            case Identifier.LAT_ACCEL -> latAccel = String.format("%8.2f", sensorValue);
-            case Identifier.LON_ACCEL -> lonAccel = String.format("%8.2f", sensorValue);
-            case Identifier.GPS_LAT -> gpsLat = String.format("%14.6f", sensorValue);
-            case Identifier.GPS_LON -> gpsLon = String.format("%14.6f", sensorValue);
+            case Identifier.VEH_SPEED -> vehSpeed = sensorValue;
+            case Identifier.STR_ANGLE -> strAngle = sensorValue;
+            case Identifier.YAW_RATE -> yawRate = sensorValue;
+            case Identifier.LAT_ACCEL -> latAccel = sensorValue;
+            case Identifier.LON_ACCEL -> lonAccel = sensorValue;
+            case Identifier.GPS_LAT -> gpsLat = sensorValue;
+            case Identifier.GPS_LON -> gpsLon = sensorValue;
         }
 
-        if(yawRate != "-" && latAccel != "-"){
-           detector.parseValue(Double.parseDouble(yawRate), Double.parseDouble(latAccel)); //this returns a boolean when a new segment occurs
+        if(yawRate != 0.0 && latAccel != 0.0){
+           detector.parseValue(yawRate, latAccel); //this returns a boolean when a new segment occurs
         }
 
         setChanged();
@@ -57,7 +57,8 @@ public class SensorDataReceiver extends Observable {
     }
 
     private String getFormattedSensorData() {
-        return String.format("%20s ms | %10s km/h | %10s deg | %10s deg/sec | %10s m/sec^s | %10s m/sec^s | %15s %15s \r",
+        return String.format("%20.2f ms | %10.2f km/h | %10.2f deg | %10.2f deg/sec | %10.2f m/sec^s | %10.2f m/sec^s | " +
+                        "%15.6f %15.6f \r",
                 curTime, vehSpeed, strAngle, yawRate, latAccel, lonAccel, gpsLat, gpsLon);
     }
 }

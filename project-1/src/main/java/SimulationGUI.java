@@ -13,13 +13,13 @@ public class SimulationGUI extends JFrame implements Observer {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1280, 720);
 
-        JLabel simulationDataHeading = getSimulationDataHeading();
         simulationData = new JLabel(String.format("%100s", "[Click Play to start Simulation]"));
         simulationData.setFont(new Font("Monospaced", Font.PLAIN, 12));
 
         // Create a panel to hold the table.
-        JPanel panel = new JPanel(new GridLayout(2, 1));
-        panel.add(simulationDataHeading);
+        JPanel panel = new JPanel(new GridLayout(3, 1));
+        panel.add(getSimulationDataHeading());
+        panel.add(getDashes());
         panel.add(simulationData);
 
         // Add the panel to the frame.
@@ -29,6 +29,15 @@ public class SimulationGUI extends JFrame implements Observer {
 
         // Make the frame visible.
         setVisible(true);
+    }
+
+    private JLabel getDashes() {
+        String dashes = String.format("   %20s |  %10s |  %10s |  %10s |  %10s |  %10s |  %30s \n",
+                "-------------", "--------------", "-------------", "-----------------", "-----------------",
+                "-----------------", "------------------------------");
+        JLabel dashLabel = new JLabel(dashes);
+        dashLabel.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        return dashLabel;
     }
 
     private JLabel getSimulationDataHeading() {
