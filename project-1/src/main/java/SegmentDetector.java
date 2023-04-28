@@ -3,75 +3,73 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class SegmentDetector {
-    Queue<Double> yawValues;
-    double currentTotalYAW;
-    Queue<Double> accelValues;
-    double currentTotalACCEL;
-    boolean currentlyStraight;
+    private Queue<Double> yawValues;
+    private double totalYaw;
+    private Queue<Double> accelValues;
+    private double totalAccel;
+    private boolean currentlyStraight;
+    private final int windowSize = 10;
 
     public SegmentDetector(){
         yawValues = new LinkedList<>();
         accelValues = new LinkedList<>();
-        currentTotalYAW = 0.0;
-        currentTotalACCEL = 0.0;
+        totalYaw = 0.0;
+        totalAccel = 0.0;
         currentlyStraight = true;
     }
 
-    public boolean parseValue(double valueYAW, double valueACCEL){
-        if(yawValues.size() == 10 && accelValues.size() == 10){
+    public boolean parseValue(double yawRate, double latAccel){
+        if(yawValues.size() == windowSize && accelValues.size() == windowSize){
 
-            currentTotalYAW = currentTotalYAW - yawValues.peek();
+            totalYaw -= yawValues.peek();
             yawValues.remove();
-            yawValues.add(valueYAW);
-            currentTotalYAW = currentTotalYAW + valueYAW;
+            yawValues.add(yawRate);
+            totalYaw += yawRate;
 
-            currentTotalACCEL = currentTotalACCEL - accelValues.peek();
+            totalAccel -= accelValues.peek();
             accelValues.remove();
-            accelValues.add(valueACCEL);
-            currentTotalACCEL = currentTotalACCEL + valueACCEL;
+            accelValues.add(latAccel);
+            totalAccel += latAccel;
+
+            double avgYaw = totalYaw / windowSize;
+            double avgAccel = totalAccel / windowSize;
 
             if(currentlyStraight){
-                if((currentTotalYAW / 10.0) > 5.0 || (currentTotalYAW / 10.0) < -5.0){
+                if(avgYaw > 5.0 || avgYaw < -5.0){
                     currentlyStraight = false;
-
-                    /*
-                    Code for testing segments, should be removed before submission
-                    */
-
                     Simulation.paused = true;
-                    if(currentTotalYAW > 5.0){
-                        System.out.println("Now on a left turn segment");    
-                    }
 
-                    if(currentTotalYAW < -5.0){
+                    if(avgYaw > 5.0){
+                        System.out.println("Now on a left turn segment");    
+                    } else if(avgYaw < -5.0){
                         System.out.println("Now on a right turn segment"); 
                     }
-                    
 
-                    currentTotalYAW = 0.0;
+                    totalYaw = 0.0;
                     yawValues.clear();
-                    currentTotalACCEL = 0.0;
+                    totalAccel = 0.0;
                     accelValues.clear();
+
                     return true;
                 }
                 else{
                     return false;
                 }
             }else{
-                if(-5.0 < (currentTotalYAW / 10.0) && (currentTotalYAW / 10.0) < 5.0){
-                    if(-0.5 < (currentTotalACCEL / 10.0) && (currentTotalACCEL / 10.0) < 0.5){
-                       currentlyStraight = true; 
-                       /* 
+                if(-5.0 < avgYaw && avgYaw < 5.0){
+                    if(-0.5 < avgAccel && avgAccel < 0.5){
+                        currentlyStraight = true;
+                       /*
                         Code for testing segments, should be removed before submission
                         */
 
                         Simulation.paused = true;
                         System.out.println("Now on a straight segment");
-                    
 
-                        currentTotalYAW = 0.0;
+
+                        totalYaw = 0.0;
                         yawValues.clear();
-                        currentTotalACCEL = 0.0;
+                        totalAccel = 0.0;
                         accelValues.clear();
 
                         return true;
@@ -87,11 +85,11 @@ public class SegmentDetector {
         }
         else{
 
-            yawValues.add(valueYAW);
-            currentTotalYAW = currentTotalYAW + valueYAW;
+            yawValues.add(yawRate);
+            totalYaw = totalYaw + yawRate;
 
-            accelValues.add(valueACCEL);
-            currentTotalACCEL = currentTotalACCEL + valueACCEL;
+            accelValues.add(latAccel);
+            totalAccel = totalAccel + latAccel;
             return false;
         }
     }
