@@ -7,28 +7,57 @@ import java.util.Scanner;
  * 1. parsing the CAN trace file
  * 2. parsing the GPS trace file
  * 3. simulating real time data sensing
+ * 4. Detect segments, classify them and print as they get detected
  */
 public class Simulation {
     private CANTrace canTrace;
     private GPSTrace gpsTrace;
     private Scanner sc;
-    private double startTime;
+    private static double startTime;
     private SensorDataReceiver sensorDataReceiver;
     private final int milliDelay = 0;
     private final int nanoDelay = 100;
     private final int simulationPauseDelay = 100;
     private CANFrame frame;
     private GPSCoordinate coord;
+    private SegmentDetector segmentDetector;
+    private static double pausedAt;
     // If paused is true, the simulation will stall, else it will continue
-    // It is public so the GUI button action can modify it
-    public static boolean paused = true;
+    private static boolean paused = true;
+
+    public static boolean getPaused() {
+        return paused;
+    }
+
+    /**
+     * Pause simulation, maintains time when sim was paused
+     */
+    public static void pauseSimulation() {
+        if (!paused) {
+            pausedAt = System.nanoTime();
+        }
+        paused = true;
+    }
+
+    /**
+     * Unpause simulation,
+     * gets the time when it was paused,
+     * uses the difference and adds to the start time as this time was last during the pause
+     */
+    public static void unpauseSimulation() {
+        if (paused) {
+            startTime += System.nanoTime() - pausedAt;
+        }
+        paused = false;
+    }
 
     /**
      * Initiate values required for the simulation
      */
     public Simulation() {
         sc = new Scanner(System.in);
-        sensorDataReceiver = new SensorDataReceiver();
+        segmentDetector = new SegmentDetector();
+        sensorDataReceiver = new SensorDataReceiver(segmentDetector);
     }
 
     /**
@@ -37,6 +66,8 @@ public class Simulation {
      * Gets first CAN frame from CAN data and first GPS coordinate from GPS data
      * Loops through data depending on whether both frame and coordinate are present,
      * or if only frame is present or if only coordinate is present
+     * Sends data to receiver which later detects segments
+     * Prints the segment data collected to console
      */
     public void startSimulation() {
         System.out.println("Start of Simulation");
@@ -45,23 +76,24 @@ public class Simulation {
             parseCANData();
             parseGPSData();
 
-            System.out.println("Press enter to start simulation");
+            System.out.println("Press enter to open simulation window");
             sc.nextLine();
 
             SimulationGUI simulationGUI = new SimulationGUI();
             sensorDataReceiver.addObserver(simulationGUI);
 
-            System.out.format("   %20s |   %10s |    %10s |         %10s |         %10s |         %10s |  %30s \n",
+            System.out.format("   %28s |   %10s |    %10s |         %10s |         %10s |         %10s |  %30s \n",
                     "Current Time", "Vehicle Speed", "Steer Angle", "Yaw Rate", "Lat Accel", "Long Accel", "GPS Lat/Long");
 
             frame = canTrace.getNextMessage();
             coord = gpsTrace.getNextMessage();
             startTime = System.nanoTime();
+            pausedAt = startTime;
 
             bothFrameAndCoordPresent();
             onlyFramePresent();
             onlyCoordPresent();
-
+            printSegmentDataToConsole();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         } catch (InterruptedException e) {
@@ -239,6 +271,20 @@ public class Simulation {
 
             // This delay is added on purpose to avoid jittery ui output
             Thread.sleep(milliDelay, nanoDelay);
+        }
+    }
+
+    /**
+     * Print the data of all the segments that were detected to console
+     */
+    private void printSegmentDataToConsole() {
+        System.out.println();
+        System.out.format(" %8s | %19s | %19s | %11s | %13s | %13s | %10s | %10s | %10s | %10s |" +
+                        " %11s | %11s\n",
+                "Seg Type", "GPS Start Lat/Lon", "GPS End Lat/Lon", "Avg Veh Spd", "Max Accel", "Min Accel",
+                "Max Veh Spd", "Min Veh Spd", "Len of str", "Curve dir", "Deg of curve", "Max str angle");
+        for(SegmentData segment : segmentDetector.getSegmentDataList()) {
+            System.out.println(segment);
         }
     }
 
